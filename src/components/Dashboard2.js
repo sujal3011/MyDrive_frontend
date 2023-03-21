@@ -74,8 +74,6 @@ const mdTheme = createTheme();
 
 function DashboardContent() {
 
-    
-
     const navigate = useNavigate();
 
     const onClickLogOut = () => {

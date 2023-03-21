@@ -96,15 +96,15 @@ const Dashbody = () => {
 
     useEffect(() => {
         if (localStorage.getItem("token")) {
-            getFolders();
+            getFolders(window.location.pathname);
             getFilesbyPath(window.location.pathname);
 
         }
         else {
-            navigate('/');
+            navigate('/login');
         }
 
-    }, [])
+    }, [window.location.pathname])
 
 
     return (

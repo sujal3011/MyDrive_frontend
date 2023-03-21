@@ -7,14 +7,15 @@ const FolderState = (props) => {
 
     //Fetching all folders
 
-    const getFolders = async () => {
+    const getFolders = async (path) => {
 
         const response = await fetch(`${host}/folders/getfolders`, {
             method: 'GET',
 
             headers: {
                 'Content-Type': 'application/json',
-                "auth-token": localStorage.getItem("token")
+                "auth-token": localStorage.getItem("token"),
+                "path":path,
             },
 
         });
@@ -115,22 +116,39 @@ const FolderState = (props) => {
         console.log("Adding folder to starred");
         const response = await fetch(`${host}/folders/starFolder/${id}`, {
             method: 'PUT',
+
+            headers: {
+                'Content-Type': 'application/json',
+                "auth-token": localStorage.getItem("token"),
+            },
           });
     }
 
 
-    const fetchStarredFolders=async ()=>{
+    const fetchStarredFolders= async ()=>{
         const response = await fetch(`${host}/folders/fetchstarredfolders`, {
             method: 'GET',
+
+            headers: {
+                'Content-Type': 'application/json',
+                "auth-token": localStorage.getItem("token"),
+            },
+
           });
 
           const json=await response.json();
+          console.log(json);
           setFolders(json);
     }
 
     const removeFolderFromStarred=async (id)=>{
         const response = await fetch(`${host}/folder/removestarFolder/${id}`, {
             method: 'PUT',
+
+            headers: {
+                'Content-Type': 'application/json',
+                "auth-token": localStorage.getItem("token"),
+            },
           });
 
         const updatedFolders=folders.filter(folder=>folder._id!==id);

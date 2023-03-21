@@ -37,6 +37,7 @@ const FileState = (props) => {
         const response = await fetch('http://localhost/files/getfilesbypath', {
             method: 'GET', 
             headers: {
+                'Content-Type': 'application/json',
                 "auth-token":localStorage.getItem("token"),
                 "path":pathname
              
