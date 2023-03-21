@@ -3,6 +3,8 @@ import fileContext from './fileContext'
 
 const FileState = (props) => {
 
+    const host = process.env.REACT_APP_SERVER_DOMAIN
+
     const [files, setFiles] = useState([]);
 
     const addFile = async (selectedFile,path) => {
@@ -10,7 +12,7 @@ const FileState = (props) => {
         const formData = new FormData();
         formData.append('file', selectedFile);
 
-        const response = await fetch('http://localhost/files/upload', {  //the response received here is JSON
+        const response = await fetch(`${host}/files/upload`, {  //the response received here is JSON
 
             method: 'POST',
             headers: {
@@ -34,7 +36,7 @@ const FileState = (props) => {
 
     const getFilesbyPath=async (pathname)=>{
 
-        const response = await fetch('http://localhost/files/getfilesbypath', {
+        const response = await fetch(`${host}/files/getfilesbypath`, {
             method: 'GET', 
             headers: {
                 'Content-Type': 'application/json',
@@ -50,14 +52,14 @@ const FileState = (props) => {
     }
 
     const addToStarred=async (id)=>{
-        const response = await fetch(`http://localhost/files/starFile/${id}`, {
+        const response = await fetch(`${host}/files/starFile/${id}`, {
             method: 'PUT',
           });
     }
 
 
     const fetchStarredFiles=async ()=>{
-        const response = await fetch("http://localhost/files/fetchstarredfiles", {
+        const response = await fetch(`${host}/files/fetchstarredfiles`, {
             method: 'GET',
           });
 
@@ -67,7 +69,7 @@ const FileState = (props) => {
 
     const removeFileFromStarred=async (id)=>{
         console.log("Removing file from starred");
-        const response = await fetch(`http://localhost/files/removestarFile/${id}`, {
+        const response = await fetch(`${host}/files/removestarFile/${id}`, {
             method: 'PUT',
           });
 
