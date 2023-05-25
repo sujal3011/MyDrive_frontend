@@ -30,25 +30,47 @@ import { useNavigate } from "react-router-dom";
 //   );
 // }
 
+// Function to convert file to base64  
+function convertToBase64(file){
+  return new Promise((resolve,reject)=>{
+    const fileReader = new FileReader();
+    fileReader.readAsDataURL(file);
+    fileReader.onload=()=>{
+      resolve(fileReader.result);
+    }
+    fileReader.onerror = (error) =>{
+      reject(error);
+    }
+  })
+}
+
 const theme = createTheme();
 
 export default function SignUp() {
 
   const navigate = useNavigate();
 
-  const [credentials, setCredentials] = useState({name:"",email:"",password:"",cpassword:""});
+  const [credentials, setCredentials] = useState({name:"",email:"",password:"",cpassword:"",profile_photo:""});
 
-  const onChange = (e) => {
-    setCredentials({ ...credentials, [e.target.name]: e.target.value });
+  const onChange = async (e) => {
+
+    if(e.target.type==='file'){
+      const file = e.target.files[0];
+      const base64 = await convertToBase64(file); //converting the image from binary format to a string
+      console.log(base64);  
+      setCredentials({ ...credentials, [e.target.name]: base64 });
+
+    }
+    
+    else{
+      setCredentials({ ...credentials, [e.target.name]: e.target.value });
+    }
 }
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-    console.log(process.env.REACT_APP_SERVER_DOMAIN);
 
     if(credentials.cpassword==credentials.password){
-
-    
     
     const response = await fetch(`${process.env.REACT_APP_SERVER_DOMAIN}/auth/createUser`, {
       method: 'POST',
@@ -56,7 +78,7 @@ export default function SignUp() {
       headers: {
           'Content-Type': 'application/json',
       },
-      body: JSON.stringify({ name: credentials.name, email: credentials.email, password: credentials.password })
+      body: JSON.stringify({ name: credentials.name, email: credentials.email, password: credentials.password ,profile_photo: credentials.profile_photo })
 
   });
 
@@ -126,6 +148,7 @@ export default function SignUp() {
                   autoComplete="email"
                 />
               </Grid>
+
               <Grid item xs={12}>
                 <TextField onChange={onChange}
                   required
@@ -149,6 +172,24 @@ export default function SignUp() {
                   autoComplete="new-password"
                 />
               </Grid>
+
+              <Grid item xs={12} sx={{ color: 'rgba(0, 0, 0, 0.6)' ,ml:2 }}>
+              Choose profile photo
+              </Grid>
+
+              <Grid item xs={12}>
+                <TextField onChange={onChange}
+                  required
+                  fullWidth
+                  name="profile_photo"
+                  label=""
+                  type="file"
+                  id="profile_photo"
+                  autoComplete="profile_photo"
+                />
+              </Grid>
+
+
               
             </Grid>
             <Button
@@ -167,6 +208,32 @@ export default function SignUp() {
               </Grid>
             </Grid>
           </Box>
+        </Box>
+
+        <Box>
+
+        
+        <div class="google-btn">
+          <div class="google-icon-wrapper">
+            <img class="google-icon" src="https://upload.wikimedia.org/wikipedia/commons/5/53/Google_%22G%22_Logo.svg"/>
+          </div>
+          <div class="btn-text"><b>Google</b></div>
+        </div>
+
+        <div class="google-btn">
+          <div class="google-icon-wrapper">
+            <img class="google-icon" src="https://upload.wikimedia.org/wikipedia/commons/b/b8/2021_Facebook_icon.svg"/>
+          </div>
+          <div class="btn-text"><b>Facebook</b></div>
+        </div>
+
+        <div class="google-btn">
+          <div class="google-icon-wrapper">
+            <img class="google-icon" src="https://upload.wikimedia.org/wikipedia/commons/9/91/Octicons-mark-github.svg"/>
+          </div>
+          <div class="btn-text"><b>Github</b></div>
+        </div>
+
         </Box>
         {/* <Copyright sx={{ mt: 5 }} /> */}
       </Container>

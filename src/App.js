@@ -7,6 +7,8 @@ import FolderState from "./context/folders/FolderState";
 import FileState from "./context/files/FileState";
 import Files from "./components/Files";
 import StarredPage from "./components/StarredPage";
+import Redirect from "./components/Redirect"
+import ProfilePage from "./components/ProfilePage";
 
 
 function App() {
@@ -21,6 +23,8 @@ function App() {
             <Route path="/signup" element={<Signup />} />
             <Route path="/folders/:id" element={<Home />} />
             <Route path="/starredPage" element={<StarredPage />} />
+            <Route path="/redirect" element={<Redirect />} />
+            <Route path="/profile" element={<ProfilePage />} />
 
           </Routes>
         </Router>

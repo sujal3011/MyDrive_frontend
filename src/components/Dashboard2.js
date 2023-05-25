@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { useState,useEffect } from 'react';
 import { styled, createTheme, ThemeProvider } from '@mui/material/styles';
 import CssBaseline from '@mui/material/CssBaseline';
 import MuiDrawer from '@mui/material/Drawer';
@@ -23,6 +24,8 @@ import { NavLink } from 'react-router-dom';
 import Dashbody from './Dashbody';
 import { useNavigate } from "react-router-dom";
 import FileDialog from './FileDialog'
+import Avatar from '@mui/material/Avatar';
+import { deepOrange, deepPurple } from '@mui/material/colors';
 
 const drawerWidth = 240;
 
@@ -90,6 +93,32 @@ function DashboardContent() {
         setOpen(!open);
     };
 
+    const [user, setUser] = useState("");
+
+    const getUserDetails = async () => {
+        const response = await fetch(`${process.env.REACT_APP_SERVER_DOMAIN}/auth/getUser`, {
+          method: 'POST',
+    
+          headers: {
+            "auth-token": localStorage.getItem("token")
+          },
+    
+        });
+        const json = await response.json();
+        const name = json.name;
+        const name_arr = name.split(" ");
+        const firstname_firstcharacter=name_arr[0][0].toUpperCase();
+        const lastname_firstcharacter=name_arr[name_arr.length-1][0].toUpperCase();
+        setUser(firstname_firstcharacter + lastname_firstcharacter);
+    }
+
+    useEffect(()=>{
+
+        if(localStorage.getItem("token")){
+            getUserDetails();
+        }
+    },[]);
+
     return (
         <>
             <ThemeProvider theme={mdTheme}>
@@ -133,11 +162,10 @@ function DashboardContent() {
 
                                     ""
 
-
-
-
                                 )
                             }
+
+                            <NavLink  to="/profile"><Avatar sx={{ bgcolor: deepPurple[500] }} >{user}</Avatar></NavLink>
 
                         </Toolbar>
                     </AppBar>

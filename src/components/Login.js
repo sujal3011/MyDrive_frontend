@@ -9,12 +9,14 @@ import TextField from '@mui/material/TextField';
 import Link from '@mui/material/Link';
 import Grid from '@mui/material/Grid';
 import Box from '@mui/material/Box';
+import { ListItem } from '@mui/material';
 // import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { NavLink } from 'react-router-dom';
 import { useNavigate } from "react-router-dom";
+<link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Open+Sans" />
 
 // function Copyright(props) {
 //   return (
@@ -68,6 +70,10 @@ export default function SignIn() {
       alert("Invalid credentials");
   }
   };
+
+  const googleSignIn=()=>{
+    window.open("http://localhost/auth/google","_self");
+  }
 
   return (
     <ThemeProvider theme={theme}>
@@ -135,6 +141,38 @@ export default function SignIn() {
               </Grid>
             </Grid>
           </Box>
+        </Box>
+
+        <ListItem divider></ListItem>
+
+        <Box>
+
+        
+        <a href="http://localhost/auth/google">
+        <div class="google-btn">
+          <div class="google-icon-wrapper">
+            <img class="google-icon" src="https://upload.wikimedia.org/wikipedia/commons/5/53/Google_%22G%22_Logo.svg"/>
+          </div>
+          <div class="btn-text"><b>Google</b></div>
+        </div>
+        </a>
+
+        <div class="google-btn">
+          <div class="google-icon-wrapper">
+            <img class="google-icon" src="https://upload.wikimedia.org/wikipedia/commons/b/b8/2021_Facebook_icon.svg"/>
+          </div>
+          <div class="btn-text"><b>Facebook</b></div>
+        </div>
+
+        <a href="http://localhost/auth/github">
+        <div class="google-btn">
+          <div class="google-icon-wrapper">
+            <img class="google-icon" src="https://upload.wikimedia.org/wikipedia/commons/9/91/Octicons-mark-github.svg"/>
+          </div>
+          <div class="btn-text"><b>Github</b></div>
+        </div>
+       </a>
+
         </Box>
         {/* <Copyright sx={{ mt: 8, mb: 4 }} /> */}
       </Container>
