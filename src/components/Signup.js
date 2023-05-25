@@ -57,7 +57,7 @@ export default function SignUp() {
     if(e.target.type==='file'){
       const file = e.target.files[0];
       const base64 = await convertToBase64(file); //converting the image from binary format to a string
-      console.log(base64);  
+      // console.log(base64);  
       setCredentials({ ...credentials, [e.target.name]: base64 });
 
     }
@@ -83,7 +83,7 @@ export default function SignUp() {
   });
 
   const json = await response.json();
-  console.log(json);
+  // console.log(json);
 
   if (json.success) {   //checking if we successfully got the response or not
       //saving the auth token and redirecting
@@ -212,13 +212,15 @@ export default function SignUp() {
 
         <Box>
 
-        
+       
+        <a href={`${process.env.REACT_APP_SERVER_DOMAIN}/auth/google`}>
         <div class="google-btn">
           <div class="google-icon-wrapper">
             <img class="google-icon" src="https://upload.wikimedia.org/wikipedia/commons/5/53/Google_%22G%22_Logo.svg"/>
           </div>
           <div class="btn-text"><b>Google</b></div>
         </div>
+        </a>
 
         <div class="google-btn">
           <div class="google-icon-wrapper">

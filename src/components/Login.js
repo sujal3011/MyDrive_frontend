@@ -148,7 +148,7 @@ export default function SignIn() {
         <Box>
 
         
-        <a href="http://localhost/auth/google">
+        <a href={`${process.env.REACT_APP_SERVER_DOMAIN}/auth/google`}>
         <div class="google-btn">
           <div class="google-icon-wrapper">
             <img class="google-icon" src="https://upload.wikimedia.org/wikipedia/commons/5/53/Google_%22G%22_Logo.svg"/>

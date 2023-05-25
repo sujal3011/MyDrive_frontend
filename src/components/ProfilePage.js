@@ -22,7 +22,7 @@ export default function MediaCard() {
     
         });
         const json = await response.json();
-        console.log(json);
+        // console.log(json);
         setUser(json);
       }
     
@@ -38,12 +38,13 @@ export default function MediaCard() {
   return (
     <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center',  height: '100vh',width: '100vw' }}>
 
-    <Card sx={{ height: '50%',width: '50%' }}>
+    <Card raised sx={{ height: '50%',width: '50%' }}>
 
-      <CardMedia
-        sx={{ height: 140 }}
-        image="/static/images/cards/contemplative-reptile.jpg"
-        title="green iguana"
+      <CardMedia 
+        component="img"
+        image={user && user.profile_photo}
+        title="profile photo"
+        sx={{ height: '50%',objectFit: "contain",mt : 2 }}
       />
 
       <CardContent>
