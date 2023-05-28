@@ -54,6 +54,9 @@ const FileState = (props) => {
     const addToStarred=async (id)=>{
         const response = await fetch(`${host}/files/starFile/${id}`, {
             method: 'PUT',
+            headers: {
+                "auth-token":localStorage.getItem("token")
+            },
           });
     }
 
@@ -61,6 +64,9 @@ const FileState = (props) => {
     const fetchStarredFiles=async ()=>{
         const response = await fetch(`${host}/files/fetchstarredfiles`, {
             method: 'GET',
+            headers: {
+                "auth-token":localStorage.getItem("token")
+            },
           });
 
           const json=await response.json();
@@ -71,6 +77,9 @@ const FileState = (props) => {
         console.log("Removing file from starred");
         const response = await fetch(`${host}/files/removestarFile/${id}`, {
             method: 'PUT',
+            headers: {
+                "auth-token":localStorage.getItem("token")
+            },
           });
 
         const updatedFiles=files.filter(file=>file._id!=id);

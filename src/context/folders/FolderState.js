@@ -5,7 +5,7 @@ const FolderState = (props) => {
     const host = process.env.REACT_APP_SERVER_DOMAIN
     const [folders, setFolders] = useState([]);
 
-    //Fetching all folders
+    // ROUTE-1 Fetching all folders
 
     const getFolders = async (path) => {
 
@@ -25,7 +25,7 @@ const FolderState = (props) => {
 
     }
 
-    //Adding a new folder
+    // ROUTE-2 Adding a new folder
 
     const addFolder = async (name,path) => {
 
@@ -47,6 +47,7 @@ const FolderState = (props) => {
 
     }
 
+    // ROUTE-3  updating a folder
     const editFolder = async (id, name) => {
 
         try {
@@ -82,6 +83,8 @@ const FolderState = (props) => {
 
     }
 
+     // ROUTE-4  deleting a folder
+
     const deleteFolder = async (folder_id) => {
 
         // TODO
@@ -112,6 +115,9 @@ const FolderState = (props) => {
         
     }
 
+
+    // ROUTE-5  adding a folder to starred
+    
     const addFolderToStarred=async (id)=>{
         console.log("Adding folder to starred");
         const response = await fetch(`${host}/folders/starFolder/${id}`, {
@@ -124,6 +130,7 @@ const FolderState = (props) => {
           });
     }
 
+    // ROUTE-6  fetching all starred folders
 
     const fetchStarredFolders= async ()=>{
         const response = await fetch(`${host}/folders/fetchstarredfolders`, {
@@ -140,6 +147,8 @@ const FolderState = (props) => {
           console.log(json);
           setFolders(json);
     }
+
+    // ROUTE-7  removing a folder from starred
 
     const removeFolderFromStarred=async (id)=>{
         const response = await fetch(`${host}/folder/removestarFolder/${id}`, {
