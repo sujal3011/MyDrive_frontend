@@ -82,7 +82,7 @@ const Dashbody = () => {
 
 
     const filecontext = useContext(fileContext);
-    const { files, getFilesbyPath, addToStarred } = filecontext;
+    const { files, getFilesbyPath, addToStarred,deleteFile} = filecontext;
 
     const navigate = useNavigate();
     const foldercontext = useContext(folderContext);
@@ -221,7 +221,12 @@ const Dashbody = () => {
                                         }
                                     >
                                        <MenuItem onClick={() => setDialogOpenfile(true)}>Rename file</MenuItem>
-                                        <MenuItem onClick={handleCloseFile}>Delete</MenuItem>
+                                        <MenuItem onClick={()=>{
+
+                                            deleteFile(item._id);
+                                            setContextMenufile(null);
+                                        }}>Delete</MenuItem>
+
                                         <MenuItem onClick={handleCloseFile}>Share</MenuItem>
                                         <MenuItem onClick={handleCloseFile}>Download</MenuItem>
                                         <MenuItem onClick={() => { handleFileStar(item._id) }}>Add to Starred</MenuItem>
