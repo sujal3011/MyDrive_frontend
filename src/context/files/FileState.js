@@ -114,7 +114,6 @@ const FileState = (props) => {
     // ROUTE-7  removing a file from starred
 
     const removeFileFromStarred=async (id)=>{
-        console.log("Removing file from starred");
         const response = await fetch(`${host}/files/removestarFile/${id}`, {
             method: 'PUT',
             headers: {
@@ -126,9 +125,19 @@ const FileState = (props) => {
         const updatedFiles=files.filter(file=>file._id!=id);
         setFiles(updatedFiles);
     }
+
+    const displayImageFile = async (id)=>{
+        try {
+            const response = await fetch(`${host}/files/image/${id}`, {
+                method: 'GET',
+              });
+        } catch (error) {
+            console.log(error);
+        }
+    }
     
     return (
-        <fileContext.Provider value={{files,addFile,getFilesbyPath,addToStarred,fetchStarredFiles,removeFileFromStarred,editFile,deleteFile}}>
+        <fileContext.Provider value={{files,addFile,getFilesbyPath,addToStarred,fetchStarredFiles,removeFileFromStarred,editFile,deleteFile,displayImageFile}}>
             {props.children}
         </fileContext.Provider>
     )

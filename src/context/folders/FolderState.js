@@ -42,7 +42,6 @@ const FolderState = (props) => {
 
         });
         const folder = await response.json();
-        console.log(folder);
         setFolders(folders.concat(folder));
 
     }

@@ -1,7 +1,7 @@
 import React, { useContext, useEffect, useState } from 'react'
 import Container from '@mui/material/Container';
 import Grid from '@mui/material/Grid';
-import { NavLink } from 'react-router-dom';
+import { NavLink,Link } from 'react-router-dom';
 import FolderOpenOutlinedIcon from '@mui/icons-material/FolderOpenOutlined';
 import { Chip } from '@mui/material';
 import Paper from '@mui/material/Paper';
@@ -17,6 +17,8 @@ import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
 import RenameFolderDialog from './RenameFolderDialog';
 import RenameFileDialog from './RenameFileDialog';
+import FolderContextMenu from './FolderContextMenu';
+import FileContextMenu from './FileContextMenu';
 
 
 
@@ -32,6 +34,8 @@ const Item = styled(Paper)(({ theme }) => ({
 
 const Dashbody = () => {
 
+    const host = process.env.REACT_APP_SERVER_DOMAIN;
+
 
     // const [contextMenu, setContextMenu] = React.useState(null);
     const [contextMenufolder, setContextMenufolder] = React.useState(null);
@@ -40,59 +44,24 @@ const Dashbody = () => {
     const [dialogOpenfolder, setDialogOpenfolder] = React.useState(false);  //this state is for the dialog box to rename the folder
     const [dialogOpenfile, setDialogOpenfile] = React.useState(false);  //this state is for the dialog box to rename the file
 
-    
 
-
-
-    const handleContextMenuFolder = (event) => {
-        event.preventDefault();
-        setContextMenufolder(
-            contextMenufolder === null
-                ? {
-                    mouseX: event.clientX + 2,
-                    mouseY: event.clientY - 6,
-                }
-                :
-                null,
-        );
-    };
-
-
-    const handleContextMenuFile = (event) => {
-        event.preventDefault();
-        setContextMenufile(
-            contextMenufile === null
-                ? {
-                    mouseX: event.clientX + 2,
-                    mouseY: event.clientY - 6,
-                }
-                :
-                null,
-        );
-    };
-
+    const [contextFolder, setContextFolder] = useState("");  // This state will store the id of the folder that will be right clicked
+    const [contextFile, setContextFile] = useState("");      // This state will store the id of the file that will be right clicked
 
     const handleCloseFile = () => {
         setContextMenufile(null);
     };
-
     const handleCloseFolder = () => {
         setContextMenufolder(null);
     };
 
-
     const filecontext = useContext(fileContext);
-    const { files, getFilesbyPath, addToStarred,deleteFile} = filecontext;
+    const { files, getFilesbyPath, addToStarred,deleteFile,displayImageFile} = filecontext;
 
     const navigate = useNavigate();
     const foldercontext = useContext(folderContext);
 
     const { folders, getFolders,addFolderToStarred,deleteFolder} = foldercontext;
-
-    const handleFileStar = (id) => {
-        addToStarred(id);
-        setContextMenufile(null);
-    }
 
     useEffect(() => {
         if (localStorage.getItem("token")) {
@@ -132,12 +101,25 @@ const Dashbody = () => {
                         folders.map((item) => {
 
                             return (
-
                                 <>
 
-                                <Box sx={{ m: "0.5rem" }} key={item._id} >
+                                <Box sx={{ m: "0.5rem" }} key={item._id} 
+                                onContextMenu={e=>{
+                                    e.preventDefault();
+                                    setContextMenufolder(
+                                        contextMenufolder === null
+                                            ? {
+                                                mouseX: e.clientX + 2,
+                                                mouseY: e.clientY - 6,
+                                            }
+                                            :
+                                            null,
+                                    );
+                                    setContextFolder(item._id);
 
-                                    <Grid item xs={2} onContextMenu={handleContextMenuFolder} style={{ cursor: 'context-menu', maxWidth: "100%" }}>
+                                }}>
+
+                                    <Grid item xs={2}  style={{ cursor: 'context-menu', maxWidth: "100%" }}>
                                         <NavLink to={`/folders/${item._id}`}><Item sx={{ display: 'flex', justifyContent: 'start', alignItems: 'center', cursor: "pointer" }}>
 
                                             <FolderOpenOutlinedIcon fontSize='large' sx={{ mx: "0.5rem" }} />
@@ -145,49 +127,17 @@ const Dashbody = () => {
 
                                         </Item></NavLink>
                                     </Grid>
-
-                                    <Menu
-                                        open={contextMenufolder !== null}
-                                        onClose={handleCloseFolder}
-                                        anchorReference="anchorPosition"
-                                        anchorPosition={
-                                            contextMenufolder !== null
-                                                ? { top: contextMenufolder.mouseY, left: contextMenufolder.mouseX }
-                                                : undefined
-                                        }
-                                    >
-                                        <MenuItem onClick={() => {
-                                            setDialogOpenfolder(true)
-                                            setContextMenufolder(null)
-                                        }}>Rename folder</MenuItem>
-
-                                        <MenuItem onClick={()=>{
-                                            deleteFolder(item._id)
-                                            setContextMenufolder(null)
-                                        }}>Delete</MenuItem>
-
-                                        <MenuItem onClick={handleCloseFolder}>Share</MenuItem>
-                                        <MenuItem onClick={handleCloseFolder}>Download</MenuItem>
-                                        <MenuItem onClick={() => { 
-                                             addFolderToStarred(item._id);
-                                             setContextMenufolder(null);
-                                         }}>Add to Starred</MenuItem>
-                                    </Menu>
-
-
                                 </Box>
-                                
-                                <RenameFolderDialog open={dialogOpenfolder} setOpen={setDialogOpenfolder} folder_id={item._id} />
+
                                 </>
                                 )
-                        })
+                            })
                     }
+                    <RenameFolderDialog open={dialogOpenfolder} setOpen={setDialogOpenfolder} folder_id={contextFolder} />
+                    <FolderContextMenu contextMenufolder={contextMenufolder} setContextMenufolder={setContextMenufolder} handleCloseFolder={handleCloseFolder} setDialogOpenfolder={setDialogOpenfolder} folder_id={contextFolder}></FolderContextMenu>
                 </Grid>
 
-
             </Container>
-
-
             <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
 
                 <Typography variant="h5" gutterBottom>
@@ -200,52 +150,61 @@ const Dashbody = () => {
                             return (
 
 
-                                <Box key={item._id} sx={{ mx: "0.5rem", my: "0.5rem" }}>
-                                    <Grid item xs={3} onContextMenu={handleContextMenuFile} style={{ cursor: 'context-menu', width: "100%", maxWidth: "100%" }} >
-                                        <NavLink to="/"><Item sx={{ display: 'flex', justifyContent: 'start', alignItems: 'center', cursor: "pointer", textDecoration: "none" }}>
+                                <Box key={item._id} sx={{ mx: "0.5rem", my: "0.5rem" }}
+                                
+                                onContextMenu={e=>{
+                                    e.preventDefault();
+                                    setContextMenufile(
+                                        contextMenufile === null
+                                            ? {
+                                                mouseX: e.clientX + 2,
+                                                mouseY: e.clientY - 6,
+                                            }
+                                            :
+                                            null,
+                                    );
+                                    setContextFile(item._id);
 
-                                            <FolderOpenOutlinedIcon fontSize='large' sx={{ mx: "0.5rem" }} />
-                                            <Chip sx={{ mx: "0.5rem" }} label={`${item.original_name}`} variant="contained" />
+                                }}
+                                >
+                                    <Grid item xs={3} style={{ cursor: 'context-menu', width: "100%", maxWidth: "100%" }} >
 
-                                        </Item></NavLink>
+                                        {
+                                            (item.file_type==='image/svg+xml' || item.file_type==='image/png' || item.file_type==='image/jpeg') 
+                                            
+                                            ?   <a href={`${host}/files/image/${item._id}`} target="_blank" >
+                                                <Item sx={{ display: 'flex', justifyContent: 'start', alignItems: 'center', cursor: "pointer", textDecoration: "none" }}>
+
+                                                    <FolderOpenOutlinedIcon fontSize='large' sx={{ mx: "0.5rem" }} />
+                                                    <Chip sx={{ mx: "0.5rem" }} label={`${item.original_name}`} variant="contained" />
+
+                                                </Item>
+                                                </a>
+
+                                            :   
+                                                <Item sx={{ display: 'flex', justifyContent: 'start', alignItems: 'center', cursor: "pointer", textDecoration: "none" }}>
+
+                                                    <FolderOpenOutlinedIcon fontSize='large' sx={{ mx: "0.5rem" }} />
+                                                    <Chip sx={{ mx: "0.5rem" }} label={`${item.original_name}`} variant="contained" />
+
+                                                </Item>
+                                                
+                                        }       
+
                                     </Grid>
+                                    
 
-                                    <Menu
-                                        open={contextMenufile !== null}
-                                        onClose={handleCloseFile}
-                                        anchorReference="anchorPosition"
-                                        anchorPosition={
-                                            contextMenufile !== null
-                                                ? { top: contextMenufile.mouseY, left: contextMenufile.mouseX }
-                                                : undefined
-                                        }
-                                    >
-                                       <MenuItem onClick={() => setDialogOpenfile(true)}>Rename file</MenuItem>
-                                        <MenuItem onClick={()=>{
-
-                                            deleteFile(item._id);
-                                            setContextMenufile(null);
-                                        }}>Delete</MenuItem>
-
-                                        <MenuItem onClick={handleCloseFile}>Share</MenuItem>
-                                        <MenuItem onClick={handleCloseFile}>Download</MenuItem>
-                                        <MenuItem onClick={() => { handleFileStar(item._id) }}>Add to Starred</MenuItem>
-                                    </Menu>
-
-                                    <RenameFileDialog open={dialogOpenfile} setOpen={setDialogOpenfile} file_id={item._id} />
                                 </Box>
-
 
                             )
                         })
                     }
+                    <RenameFileDialog open={dialogOpenfile} setOpen={setDialogOpenfile} file_id={contextFile} />
+                    <FileContextMenu contextMenufile={contextMenufile} setContextMenufile={setContextMenufile} handleCloseFile={handleCloseFile} setDialogOpenfile={setDialogOpenfile} file_id={contextFile}></FileContextMenu>  
                 </Grid>
-
-
 
             </Container>
         </Box>
-
         
     )
 }
