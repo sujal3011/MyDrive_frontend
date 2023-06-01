@@ -31,9 +31,39 @@ const FileState = (props) => {
 
     // ROUTE-2 Renaming a file
 
-    const editFile=async ()=>{
-        
-        
+    const renameFile = async (id, name) => {
+
+        try {
+
+            const response = await fetch(`${host}/files/renamefile/${id}`, {
+                method: 'PUT',
+
+                headers: {
+                    'Content-Type': 'application/json',
+                    "auth-token": localStorage.getItem("token")
+                },
+
+                body: JSON.stringify({ name }),
+
+            });
+            const json = await response.json();
+            console.log(json);
+
+            let newFiles = JSON.parse(JSON.stringify(files))
+            for (let i = 0; i < newFiles.length; i++) {
+                const ele = newFiles[i];
+                if (ele._id === id) {  
+                    newFiles[i].original_name = json.original_name;
+                    break;
+                }
+
+            }
+            setFiles(newFiles);
+
+        } catch (error) {
+            console.log(error);
+        }
+
     }
 
     // ROUTE-3 Deleting a file
@@ -51,10 +81,7 @@ const FileState = (props) => {
                 },
     
             });
-            // console.log(typeof(response));
             const json=response.json();
-            // console.log(typeof(json));
-            // console.log(response);
             console.log(json);
 
             const newFiles=files.filter(file=>file._id!==file_id);
@@ -122,7 +149,7 @@ const FileState = (props) => {
             },
           });
 
-        const updatedFiles=files.filter(file=>file._id!=id);
+        const updatedFiles=files.filter(file=>file._id!==id);
         setFiles(updatedFiles);
     }
 
@@ -137,7 +164,7 @@ const FileState = (props) => {
     }
     
     return (
-        <fileContext.Provider value={{files,addFile,getFilesbyPath,addToStarred,fetchStarredFiles,removeFileFromStarred,editFile,deleteFile,displayImageFile}}>
+        <fileContext.Provider value={{files,addFile,getFilesbyPath,addToStarred,fetchStarredFiles,removeFileFromStarred,renameFile,deleteFile,displayImageFile}}>
             {props.children}
         </fileContext.Provider>
     )

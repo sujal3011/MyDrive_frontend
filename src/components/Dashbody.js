@@ -19,6 +19,10 @@ import RenameFolderDialog from './RenameFolderDialog';
 import RenameFileDialog from './RenameFileDialog';
 import FolderContextMenu from './FolderContextMenu';
 import FileContextMenu from './FileContextMenu';
+import Card from '@mui/material/Card';
+import CardActions from '@mui/material/CardActions';
+import CardContent from '@mui/material/CardContent';
+import CardMedia from '@mui/material/CardMedia';
 
 
 
@@ -120,12 +124,14 @@ const Dashbody = () => {
                                 }}>
 
                                     <Grid item xs={2}  style={{ cursor: 'context-menu', maxWidth: "100%" }}>
-                                        <NavLink to={`/folders/${item._id}`}><Item sx={{ display: 'flex', justifyContent: 'start', alignItems: 'center', cursor: "pointer" }}>
+                                        <NavLink to={`/folders/${item._id}`} style={{ color: 'inherit', textDecoration: 'inherit'}}>
+                                            <Item sx={{ display: 'flex', justifyContent: 'start', alignItems: 'center', cursor: "pointer" }}>
 
-                                            <FolderOpenOutlinedIcon fontSize='large' sx={{ mx: "0.5rem" }} />
-                                            <Chip label={`${item.name}`} variant="outlined" sx={{ mx: "0.5rem" }} />
+                                                <FolderOpenOutlinedIcon fontSize='large' sx={{ mx: "0.5rem" }} />
+                                                <Chip label={`${item.name}`} variant="outlined" sx={{ mx: "0.5rem" }} />
 
-                                        </Item></NavLink>
+                                            </Item>
+                                        </NavLink>
                                     </Grid>
                                 </Box>
 
@@ -173,12 +179,22 @@ const Dashbody = () => {
                                             (item.file_type==='image/svg+xml' || item.file_type==='image/png' || item.file_type==='image/jpeg') 
                                             
                                             ?   <a href={`${host}/files/image/${item._id}`} target="_blank" >
-                                                <Item sx={{ display: 'flex', justifyContent: 'start', alignItems: 'center', cursor: "pointer", textDecoration: "none" }}>
 
-                                                    <FolderOpenOutlinedIcon fontSize='large' sx={{ mx: "0.5rem" }} />
+
+                                                <Card sx={{ maxWidth: 345 }}>
+                                                    <CardMedia
+                                                        component="img"
+                                                        alt="green iguana"
+                                                        height="140"
+                                                        image={`${host}/files/image/${item._id}`}
+                                                    />
+                                                    <CardContent>  
                                                     <Chip sx={{ mx: "0.5rem" }} label={`${item.original_name}`} variant="contained" />
+                                                    </CardContent>
+            
+                                                    </Card>
 
-                                                </Item>
+
                                                 </a>
 
                                             :   
@@ -187,13 +203,11 @@ const Dashbody = () => {
                                                     <FolderOpenOutlinedIcon fontSize='large' sx={{ mx: "0.5rem" }} />
                                                     <Chip sx={{ mx: "0.5rem" }} label={`${item.original_name}`} variant="contained" />
 
-                                                </Item>
-                                                
+                                                </Item>    
                                         }       
 
                                     </Grid>
                                     
-
                                 </Box>
 
                             )

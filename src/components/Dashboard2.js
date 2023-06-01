@@ -165,7 +165,7 @@ function DashboardContent() {
                                 )
                             }
 
-                            <NavLink  to="/profile"><Avatar sx={{ bgcolor: deepPurple[500] }} >{user}</Avatar></NavLink>
+                            <NavLink style={{color: 'inherit', textDecoration: 'inherit'}}  to="/profile"><Avatar sx={{ bgcolor: deepPurple[500] }} >{user}</Avatar></NavLink>
 
                         </Toolbar>
                     </AppBar>

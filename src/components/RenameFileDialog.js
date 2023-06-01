@@ -12,7 +12,7 @@ export default function RenameFileDialog({open , setOpen, file_id}) {
 
     const [file, setFile] = React.useState({name:""});
     const context = React.useContext(fileContext);
-    const {editFile}=context;
+    const {renameFile}=context;
 
 
     const onChange=(e)=>{
@@ -20,11 +20,10 @@ export default function RenameFileDialog({open , setOpen, file_id}) {
     }
 
     const handleClick=()=>{
-        editFile(file_id,file.name);
+        renameFile(file_id,file.name);
         setFile({name:""});
         setOpen(false);
     }
-
 
     const handleClose = () => {
         setOpen(false);

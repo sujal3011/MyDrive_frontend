@@ -13,7 +13,7 @@ import { NavLink } from 'react-router-dom';
 export const mainListItems = (
   <React.Fragment>
 
-    <NavLink to="/"><ListItemButton>
+    <NavLink to="/" style={{ color: 'inherit', textDecoration: 'inherit'}}><ListItemButton>
       <ListItemIcon>
         <DashboardIcon />
       </ListItemIcon>
@@ -29,7 +29,7 @@ export const mainListItems = (
     </ListItemButton>
 
 
-    <NavLink to="/starredPage"><ListItemButton>
+    <NavLink to="/starredPage" style={{ color: 'inherit', textDecoration: 'inherit'}}><ListItemButton>
       <ListItemIcon>
         <PeopleIcon />
       </ListItemIcon>

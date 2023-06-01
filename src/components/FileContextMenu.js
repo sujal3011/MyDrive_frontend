@@ -19,7 +19,11 @@ const FileContextMenu = ({contextMenufile,setContextMenufile,handleCloseFile,set
                 : undefined
         }
     >
-        <MenuItem onClick={() => setDialogOpenfile(true)}>Rename file</MenuItem>
+        <MenuItem onClick={() =>{
+            setDialogOpenfile(true);
+            setContextMenufile(null);
+        }}>Rename file</MenuItem>
+
         <MenuItem onClick={()=>{
             deleteFile(file_id);
             setContextMenufile(null);
