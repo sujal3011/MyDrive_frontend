@@ -1,14 +1,11 @@
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Login from './components/Login';
-import Login2 from './components/Login2';
 import Signup from './components/Signup';
-import Home from './components/Home';
 import FolderState from "./context/folders/FolderState";
 import FileState from "./context/files/FileState";
-import Files from "./components/Files";
-import StarredPage from "./components/StarredPage";
 import Redirect from "./components/Redirect"
 import ProfilePage from "./components/ProfilePage";
+import Dashboard from './components/Dashboard'
 
 
 function App() {
@@ -17,12 +14,11 @@ function App() {
       <FolderState>
         <Router>
           <Routes>
-            <Route path="/" element={<Home />} />
+            <Route path="/" element={<Dashboard page="home" />} />
             <Route path="/login" element={<Login />} />
-            <Route path="/login2" element={<Login2 />} />
             <Route path="/signup" element={<Signup />} />
-            <Route path="/folders/:id" element={<Home />} />
-            <Route path="/starredPage" element={<StarredPage />} />
+            <Route path="/folders/:id" element={<Dashboard page="home" />} />
+            <Route path="/starredPage" element={<Dashboard page="starred" />} />
             <Route path="/redirect" element={<Redirect />} />
             <Route path="/profile" element={<ProfilePage />} />
 

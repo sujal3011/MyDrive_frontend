@@ -72,7 +72,7 @@ export default function SignIn() {
   };
 
   const googleSignIn=()=>{
-    window.open("http://localhost/auth/google","_self");
+    window.open(`${process.env.REACT_APP_SERVER_DOMAIN}/auth/google`,"_self");
   }
 
   return (
