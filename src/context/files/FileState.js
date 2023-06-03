@@ -162,9 +162,20 @@ const FileState = (props) => {
             console.log(error);
         }
     }
+
+    const downloadFile = async (id)=>{
+        console.log("Inside download file");
+        try {
+            const response = await fetch(`${host}/files/downloadfile/${id}`, {
+                method: 'GET',
+              });
+        } catch (error) {
+            console.log(error);
+        }
+    }
     
     return (
-        <fileContext.Provider value={{files,addFile,getFilesbyPath,addToStarred,fetchStarredFiles,removeFileFromStarred,renameFile,deleteFile,displayImageFile}}>
+        <fileContext.Provider value={{files,addFile,getFilesbyPath,addToStarred,fetchStarredFiles,removeFileFromStarred,renameFile,deleteFile,displayImageFile,downloadFile}}>
             {props.children}
         </fileContext.Provider>
     )

@@ -6,7 +6,7 @@ import MenuItem from '@mui/material/MenuItem';
 const FileContextMenu = ({contextMenufile,setContextMenufile,handleCloseFile,setDialogOpenfile,file_id}) => {
 
     const filecontext = useContext(fileContext);
-    const { files, getFilesbyPath, addToStarred,deleteFile,displayImageFile} = filecontext;
+    const { files, getFilesbyPath, addToStarred,deleteFile,displayImageFile,downloadFile} = filecontext;
 
   return (
     <Menu
@@ -30,7 +30,12 @@ const FileContextMenu = ({contextMenufile,setContextMenufile,handleCloseFile,set
         }}>Delete</MenuItem>
 
         <MenuItem onClick={handleCloseFile}>Share</MenuItem>
-        <MenuItem onClick={handleCloseFile}>Download</MenuItem>
+
+        <MenuItem onClick={()=>{
+            downloadFile(file_id);
+            setContextMenufile(null);
+        }}>Download</MenuItem>
+
         <MenuItem onClick={() => { 
             addToStarred(file_id);
             setContextMenufile(null);

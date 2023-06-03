@@ -26,6 +26,8 @@ import { useNavigate } from "react-router-dom";
 import FileDialog from './FileDialog'
 import Avatar from '@mui/material/Avatar';
 import { deepOrange, deepPurple } from '@mui/material/colors';
+import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
+import AddMenu from './AddMenu';
 
 const drawerWidth = 240;
 
@@ -89,11 +91,21 @@ function DashboardContent() {
     const [open, setOpen] = React.useState(true);
     const [dialogOpen, setDialogOpen] = React.useState(false);  //this state is for the dialog box that will open when the 'create folder' button is clicked
     const [filedialogOpen, setFiledialogOpen] = React.useState(false);  //this state is for the dialog box that will open when the 'upload file' button is clicked
+
+    const [anchorEl, setAnchorEl] = React.useState(null); //This state  is for the addMenu box that will open when the 'New' button is clicked
+    const addMenuOpen = Boolean(anchorEl);
+
+    const [user, setUser] = useState("");
+
+    const handleClick = (event) => {
+        setAnchorEl(event.currentTarget);
+    }
+
+
     const toggleDrawer = () => {
         setOpen(!open);
     };
 
-    const [user, setUser] = useState("");
 
     const getUserDetails = async () => {
         const response = await fetch(`${process.env.REACT_APP_SERVER_DOMAIN}/auth/getUser`, {
@@ -181,8 +193,21 @@ function DashboardContent() {
 
 
                             <Box sx={{display: 'flex',flexDirection: 'column', my: '0.5rem'}}>
+
+                            <Button
+                                id="demo-customized-button"
+                                aria-controls={addMenuOpen ? 'demo-customized-menu' : undefined}
+                                aria-haspopup="true"
+                                aria-expanded={addMenuOpen ? 'true' : undefined}
+                                variant="outlined"
+                                disableElevation
+                                onClick={handleClick}
+                                endIcon={<KeyboardArrowDownIcon />}
+                            >
+                                New
+                            </Button>
                                
-                            <Button sx={{ my: '1rem'}}
+                            {/* <Button sx={{ my: '1rem'}}
                                 variant="outlined"
                                 onClick={() => setDialogOpen(true)}
                             >Create folder</Button>
@@ -190,7 +215,7 @@ function DashboardContent() {
                             <Button sx={{ my: '0.5rem'}}
                                 variant="outlined"
                                 onClick={() => setFiledialogOpen(true)}
-                            >Upload file</Button>
+                            >Upload file</Button> */}
 
                             </Box>
 
@@ -213,6 +238,7 @@ function DashboardContent() {
 
             <FormDialog open={dialogOpen} setOpen={setDialogOpen} purpose="Create" item="folder" />
             <FileDialog open={filedialogOpen} setOpen={setFiledialogOpen}/>
+            <AddMenu open={addMenuOpen} anchorEl={anchorEl} setAnchorEl={setAnchorEl} setFiledialogOpen={setFiledialogOpen} setFolderdialogOpen={setDialogOpen}/>
         </>
     );
 }
