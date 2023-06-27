@@ -4,11 +4,11 @@ import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
 import ListSubheader from '@mui/material/ListSubheader';
 import DashboardIcon from '@mui/icons-material/Dashboard';
-import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
-import PeopleIcon from '@mui/icons-material/People';
-import BarChartIcon from '@mui/icons-material/BarChart';
 import AssignmentIcon from '@mui/icons-material/Assignment';
 import { NavLink } from 'react-router-dom';
+import StarIcon from '@mui/icons-material/Star';
+import DeleteIcon from '@mui/icons-material/Delete';
+import FolderSharedIcon from '@mui/icons-material/FolderShared';
 
 export const mainListItems = (
   <React.Fragment>
@@ -23,7 +23,7 @@ export const mainListItems = (
 
     <ListItemButton>
       <ListItemIcon>
-        <ShoppingCartIcon />
+        <FolderSharedIcon/>
       </ListItemIcon>
       <ListItemText primary="Shared with me" />
     </ListItemButton>
@@ -31,7 +31,7 @@ export const mainListItems = (
 
     <NavLink to="/starredPage" style={{ color: 'inherit', textDecoration: 'inherit'}}><ListItemButton>
       <ListItemIcon>
-        <PeopleIcon />
+        <StarIcon/>
       </ListItemIcon>
       <ListItemText primary="Starred" />
     </ListItemButton></NavLink>
@@ -39,7 +39,7 @@ export const mainListItems = (
 
     <ListItemButton>
       <ListItemIcon>
-        <BarChartIcon />
+        <DeleteIcon/>
       </ListItemIcon>
       <ListItemText primary="Bin" />
     </ListItemButton>

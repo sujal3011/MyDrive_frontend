@@ -6,62 +6,67 @@ import CardContent from '@mui/material/CardContent';
 import CardMedia from '@mui/material/CardMedia';
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
-import { useState,useEffect } from 'react';
+import { useState, useEffect } from 'react';
+import { NavLink } from 'react-router-dom';
 
 export default function MediaCard() {
 
-    const [user, setUser] = useState();
+  const [user, setUser] = useState();
 
-    const getUserDetails = async () => {
-        const response = await fetch(`${process.env.REACT_APP_SERVER_DOMAIN}/auth/getUser`, {
-          method: 'POST',
-    
-          headers: {
-            "auth-token": localStorage.getItem("token")
-          },
-    
-        });
-        const json = await response.json();
-        // console.log(json);
-        setUser(json);
-      }
-    
+  const getUserDetails = async () => {
+    const response = await fetch(`${process.env.REACT_APP_SERVER_DOMAIN}/auth/getUser`, {
+      method: 'POST',
 
-    useEffect(()=>{
+      headers: {
+        "auth-token": localStorage.getItem("token")
+      },
 
-        if(localStorage.getItem("token")){
-            getUserDetails();
-        }
-      },[]);
-    
+    });
+    const json = await response.json();
+    // console.log(json);
+    setUser(json);
+  }
+
+
+  useEffect(() => {
+
+    if (localStorage.getItem("token")) {
+      getUserDetails();
+    }
+  }, []);
+
 
   return (
-    <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center',  height: '100vh',width: '100vw' }}>
+    <Box sx={{ display: 'flex',flexDirection: 'column', justifyContent: 'center', alignItems: 'center', height: '100vh', width: '100vw' }}>
 
-    <Card raised sx={{ height: '50%',width: '50%' }}>
+      <Card raised sx={{
+        mr: 2, height: '50%', width: {xs: '90%',sm: '70%',lg: '50%'},
+      }}>
 
-      <CardMedia 
-        component="img"
-        image={user && user.profile_photo}
-        title="profile photo"
-        sx={{ height: '50%',objectFit: "contain",mt : 2 }}
-      />
+        <CardMedia
+          component="img"
+          image={user && user.profile_photo}
+          title="profile photo"
+          sx={{ height: '50%', objectFit: "contain", mt: 2 }}
+        />
 
-      <CardContent>
-        <Typography gutterBottom variant="h5" component="div" sx={{  textAlign:"center" }} >
-          {user && user.name}
-        </Typography>
-        <Typography variant="body2" color="text.secondary" sx={{  textAlign:"center" }}>
-         {user && user.email}
-        </Typography>
-      </CardContent>
+        <CardContent>
+          <Typography gutterBottom variant="h5" component="div" sx={{ textAlign: "center" }} >
+            {user && user.name}
+          </Typography>
+          <Typography variant="body2" color="text.secondary" sx={{ textAlign: "center" }}>
+            {user && user.email}
+          </Typography>
+        </CardContent>
 
-      <CardActions sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center'}} >
-        <Button size="small" variant="contained">Edit Profile</Button>
-      </CardActions>
+        <CardActions sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }} >
+          <Button size="small" variant="contained">Edit Profile</Button>
+        </CardActions>
 
-    </Card>
-    
+      </Card>
+
+      <NavLink to={'/'}><Button size="small" variant="outlined" sx={{mt : 4}}> Back to home</Button></NavLink>
+
     </Box>
   );
 }

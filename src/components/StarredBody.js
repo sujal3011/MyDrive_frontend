@@ -15,6 +15,7 @@ import fileContext from '../context/files/fileContext';
 import { Button } from '@mui/material';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
+import { useTheme } from '@mui/material/styles';
 
 
 
@@ -98,19 +99,19 @@ const StarredBody = () => {
                     Folders
                 </Typography>
 
-                <Grid container spacing={2} sx={{ display: "flex", my: "0.5rem" }}>
+                <Grid container spacing={2} sx={{ display: "flex",justifyContent: { xs:"center",lg:"start"}, alignItems: 'center', my: "0.5rem"  }}>
                     {
                         folders.map((item) => {
 
                             return (
 
-                                <Box sx={{ m: "0.5rem" }} key={item._id} >
+                                <Box sx={{ m: "0.5rem",width: {xs: '100%',sm: '40%',lg: '20%',}, }} key={item._id} >
 
                                     <Grid item xs={2} onContextMenu={handleContextMenu} style={{ cursor: 'context-menu', maxWidth: "100%" }}>
                                         <NavLink to={`/folders/${item._id}`}><Item sx={{ display: 'flex', justifyContent: 'start', alignItems: 'center', cursor: "pointer" }}>
 
-                                            <FolderOpenOutlinedIcon fontSize='large' sx={{ mx: "0.5rem" }} />
-                                            <Chip label={`${item.name}`} variant="outlined" sx={{ mx: "0.5rem" }} />
+                                            <FolderOpenOutlinedIcon fontSize='large' sx={{ mx: "0.5rem",width:'20%' }} />
+                                            <Chip label={`${item.name}`} variant="outlined" sx={{ mx: "0.5rem",width:'80%' }} />
 
                                         </Item></NavLink>
                                     </Grid>
@@ -152,18 +153,18 @@ const StarredBody = () => {
                     Files
                 </Typography>
 
-                <Grid container spacing={2} sx={{ display: "flex", my: "0.5rem" }}>
+                <Grid container spacing={2} sx={{ display: "flex", my: "0.5rem",justifyContent: { xs:"center",lg:"start"}, alignItems: 'center' }}>
                     {
                         files.map((item) => {
                             return (
 
 
-                                <Box key={item._id} sx={{ mx: "0.5rem", my: "0.5rem" }}>
+                                <Box key={item._id} sx={{ mx: "0.5rem", my: "0.5rem",width: {xs: '100%', sm: '40%',lg: '20%'}, }}>
                                     <Grid item xs={3} onContextMenu={handleContextMenu} style={{ cursor: 'context-menu', width: "100%", maxWidth: "100%" }} >
                                         <NavLink to="/"><Item sx={{ display: 'flex', justifyContent: 'start', alignItems: 'center', cursor: "pointer", textDecoration: "none" }}>
 
-                                            <FolderOpenOutlinedIcon fontSize='large' sx={{ mx: "0.5rem" }} />
-                                            <Chip sx={{ mx: "0.5rem" }} label={`${item.original_name}`} variant="contained" />
+                                            <FolderOpenOutlinedIcon fontSize='large' sx={{ mx: "0.5rem",width:'20%'}} />
+                                            <Chip sx={{ mx: "0.5rem",width:'80%'  }} label={`${item.original_name}`} variant="contained" />
 
                                         </Item></NavLink>
                                     </Grid>

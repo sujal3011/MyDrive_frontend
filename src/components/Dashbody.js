@@ -1,7 +1,7 @@
 import React, { useContext, useEffect, useState } from 'react'
 import Container from '@mui/material/Container';
 import Grid from '@mui/material/Grid';
-import { NavLink,Link } from 'react-router-dom';
+import { NavLink, Link } from 'react-router-dom';
 import FolderOpenOutlinedIcon from '@mui/icons-material/FolderOpenOutlined';
 import { Chip } from '@mui/material';
 import Paper from '@mui/material/Paper';
@@ -23,7 +23,7 @@ import Card from '@mui/material/Card';
 import CardActions from '@mui/material/CardActions';
 import CardContent from '@mui/material/CardContent';
 import CardMedia from '@mui/material/CardMedia';
-
+import { useTheme } from '@mui/material/styles';
 
 
 const Item = styled(Paper)(({ theme }) => ({
@@ -39,6 +39,7 @@ const Item = styled(Paper)(({ theme }) => ({
 const Dashbody = () => {
 
     const host = process.env.REACT_APP_SERVER_DOMAIN;
+    const theme = useTheme();
 
 
     // const [contextMenu, setContextMenu] = React.useState(null);
@@ -60,12 +61,12 @@ const Dashbody = () => {
     };
 
     const filecontext = useContext(fileContext);
-    const { files, getFilesbyPath, addToStarred,deleteFile,displayImageFile} = filecontext;
+    const { files, getFilesbyPath, addToStarred, deleteFile, displayImageFile } = filecontext;
 
     const navigate = useNavigate();
     const foldercontext = useContext(folderContext);
 
-    const { folders, getFolders,addFolderToStarred,deleteFolder} = foldercontext;
+    const { folders, getFolders, addFolderToStarred, deleteFolder } = foldercontext;
 
     useEffect(() => {
         if (localStorage.getItem("token")) {
@@ -100,44 +101,50 @@ const Dashbody = () => {
                     Folders
                 </Typography>
 
-                <Grid container spacing={2} sx={{ display: "flex", my: "0.5rem" }}>
+                <Grid container spacing={2} sx={{ display: "flex",justifyContent: { xs:"center",lg:"start"}, alignItems: 'center', my: "0.5rem" }}>
                     {
                         folders.map((item) => {
 
                             return (
                                 <>
 
-                                <Box sx={{ m: "0.5rem" }} key={item._id} 
-                                onContextMenu={e=>{
-                                    e.preventDefault();
-                                    setContextMenufolder(
-                                        contextMenufolder === null
-                                            ? {
-                                                mouseX: e.clientX + 2,
-                                                mouseY: e.clientY - 6,
-                                            }
-                                            :
-                                            null,
-                                    );
-                                    setContextFolder(item._id);
+                                    <Box sx={{
+                                        m: "0.5rem", width: {
+                                            xs: '100%', // 100% width on small screens
+                                            sm: '40%', // 40% width on medium screens
+                                            lg: '20%', // 20% width on large screens
+                                        },
+                                    }} key={item._id}
+                                        onContextMenu={e => {
+                                            e.preventDefault();
+                                            setContextMenufolder(
+                                                contextMenufolder === null
+                                                    ? {
+                                                        mouseX: e.clientX + 2,
+                                                        mouseY: e.clientY - 6,
+                                                    }
+                                                    :
+                                                    null,
+                                            );
+                                            setContextFolder(item._id);
 
-                                }}>
+                                        }}>
 
-                                    <Grid item xs={2}  style={{ cursor: 'context-menu', maxWidth: "100%" }}>
-                                        <NavLink to={`/folders/${item._id}`} style={{ color: 'inherit', textDecoration: 'inherit'}}>
-                                            <Item sx={{ display: 'flex', justifyContent: 'start', alignItems: 'center', cursor: "pointer" }}>
+                                        <Grid item xs={2} style={{ cursor: 'context-menu', maxWidth: "100%" }}>
+                                            <NavLink to={`/folders/${item._id}`} style={{ color: 'inherit', textDecoration: 'inherit' }}>
+                                                <Item sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', cursor: "pointer" }}>
 
-                                                <FolderOpenOutlinedIcon fontSize='large' sx={{ mx: "0.5rem" }} />
-                                                <Chip label={`${item.name}`} variant="outlined" sx={{ mx: "0.5rem" }} />
+                                                    <FolderOpenOutlinedIcon fontSize='large' sx={{ mx: "0.5rem",width:'20%' }} />
+                                                    <Chip label={`${item.name}`} variant="outlined" sx={{ mx: "0.5rem",width:'80%' }} />
 
-                                            </Item>
-                                        </NavLink>
-                                    </Grid>
-                                </Box>
+                                                </Item>
+                                            </NavLink>
+                                        </Grid>
+                                    </Box>
 
                                 </>
-                                )
-                            })
+                            )
+                        })
                     }
                     <RenameFolderDialog open={dialogOpenfolder} setOpen={setDialogOpenfolder} folder_id={contextFolder} />
                     <FolderContextMenu contextMenufolder={contextMenufolder} setContextMenufolder={setContextMenufolder} handleCloseFolder={handleCloseFolder} setDialogOpenfolder={setDialogOpenfolder} folder_id={contextFolder}></FolderContextMenu>
@@ -150,76 +157,76 @@ const Dashbody = () => {
                     Files
                 </Typography>
 
-                <Grid container spacing={2} sx={{ display: "flex", my: "0.5rem" }}>
+                <Grid container spacing={2} sx={{ display: "flex", my: "0.5rem",justifyContent: { xs:"center",lg:"start"}, alignItems: 'center' }}>
                     {
                         files.map((item) => {
                             return (
 
 
-                                <Box key={item._id} sx={{ mx: "0.5rem", my: "0.5rem" }}
-                                
-                                onContextMenu={e=>{
-                                    e.preventDefault();
-                                    setContextMenufile(
-                                        contextMenufile === null
-                                            ? {
-                                                mouseX: e.clientX + 2,
-                                                mouseY: e.clientY - 6,
-                                            }
-                                            :
-                                            null,
-                                    );
-                                    setContextFile(item._id);
+                                <Box key={item._id} sx={{ mx: "0.5rem", my: "0.5rem",width: { xs: '100%',  sm: '40%',lg: '20%'} }}
 
-                                }}
+                                    onContextMenu={e => {
+                                        e.preventDefault();
+                                        setContextMenufile(
+                                            contextMenufile === null
+                                                ? {
+                                                    mouseX: e.clientX + 2,
+                                                    mouseY: e.clientY - 6,
+                                                }
+                                                :
+                                                null,
+                                        );
+                                        setContextFile(item._id);
+
+                                    }}
                                 >
                                     <Grid item xs={3} style={{ cursor: 'context-menu', width: "100%", maxWidth: "100%" }} >
 
                                         {
-                                            (item.file_type==='image/svg+xml' || item.file_type==='image/png' || item.file_type==='image/jpeg') 
-                                            
-                                            ?   <a href={`${host}/files/image/${item._id}`} target="_blank" >
+                                            (item.file_type === 'image/svg+xml' || item.file_type === 'image/png' || item.file_type === 'image/jpeg')
+
+                                                ? <a href={`${host}/files/image/${item._id}`} target="_blank" >
 
 
-                                                <Card sx={{ maxWidth: 345 }}>
-                                                    <CardMedia
-                                                        component="img"
-                                                        alt="green iguana"
-                                                        height="140"
-                                                        image={`${host}/files/image/${item._id}`}
-                                                    />
-                                                    <CardContent>  
-                                                    <Chip sx={{ mx: "0.5rem" }} label={`${item.original_name}`} variant="contained" />
-                                                    </CardContent>
-            
+                                                    <Card sx={{ maxWidth: 345 }}>
+                                                        {/* <CardMedia
+                                                            component="img"
+                                                            alt="green iguana"
+                                                            height="140"
+                                                            image={`${host}/files/image/${item._id}`}
+                                                        /> */}
+                                                        <CardContent>
+                                                            <Chip sx={{ mx: "0.5rem" }} label={`${item.original_name}`} variant="contained" />
+                                                        </CardContent>
+
                                                     </Card>
 
 
                                                 </a>
 
-                                            :   
+                                                :
                                                 <Item sx={{ display: 'flex', justifyContent: 'start', alignItems: 'center', cursor: "pointer", textDecoration: "none" }}>
 
-                                                    <FolderOpenOutlinedIcon fontSize='large' sx={{ mx: "0.5rem" }} />
-                                                    <Chip sx={{ mx: "0.5rem" }} label={`${item.original_name}`} variant="contained" />
+                                                    <FolderOpenOutlinedIcon fontSize='large' sx={{ mx: "0.5rem",width:'20%' }} />
+                                                    <Chip sx={{ mx: "0.5rem",width:'80%' }} label={`${item.original_name}`} variant="contained" />
 
-                                                </Item>    
-                                        }       
+                                                </Item>
+                                        }
 
                                     </Grid>
-                                    
+
                                 </Box>
 
                             )
                         })
                     }
                     <RenameFileDialog open={dialogOpenfile} setOpen={setDialogOpenfile} file_id={contextFile} />
-                    <FileContextMenu contextMenufile={contextMenufile} setContextMenufile={setContextMenufile} handleCloseFile={handleCloseFile} setDialogOpenfile={setDialogOpenfile} file_id={contextFile}></FileContextMenu>  
+                    <FileContextMenu contextMenufile={contextMenufile} setContextMenufile={setContextMenufile} handleCloseFile={handleCloseFile} setDialogOpenfile={setDialogOpenfile} file_id={contextFile}></FileContextMenu>
                 </Grid>
 
             </Container>
         </Box>
-        
+
     )
 }
 
