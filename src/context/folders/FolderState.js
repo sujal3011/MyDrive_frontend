@@ -7,9 +7,9 @@ const FolderState = (props) => {
 
     // ROUTE-1 Fetching all folders
 
-    const getFolders = async (path) => {
+    const getFolders = async (path,query) => {
 
-        const response = await fetch(`${host}/folders/getfolders`, {
+        const response = await fetch(`${host}/folders/getfolders?query=${query}`, {
             method: 'GET',
 
             headers: {
@@ -131,8 +131,8 @@ const FolderState = (props) => {
 
     // ROUTE-6  fetching all starred folders
 
-    const fetchStarredFolders= async ()=>{
-        const response = await fetch(`${host}/folders/fetchstarredfolders`, {
+    const fetchStarredFolders= async (query)=>{
+        const response = await fetch(`${host}/folders/fetchstarredfolders?query=${query}`, {
             method: 'GET',
 
             headers: {

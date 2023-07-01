@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { useState,useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { styled, createTheme, ThemeProvider } from '@mui/material/styles';
 import CssBaseline from '@mui/material/CssBaseline';
 import MuiDrawer from '@mui/material/Drawer';
@@ -29,6 +29,8 @@ import { deepOrange, deepPurple } from '@mui/material/colors';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import AddMenu from './AddMenu';
 import StarredBody from './StarredBody';
+import InputBase from '@mui/material/InputBase';
+import SearchIcon from '@mui/icons-material/Search';
 
 const drawerWidth = 240;
 
@@ -78,7 +80,7 @@ const Drawer = styled(MuiDrawer, { shouldForwardProp: (prop) => prop !== 'open' 
 
 const mdTheme = createTheme();
 
-const Dashboard = ({page}) => {
+const Dashboard = ({ page }) => {
 
     const navigate = useNavigate();
 
@@ -89,7 +91,7 @@ const Dashboard = ({page}) => {
     }
 
 
-    const [open, setOpen] = React.useState(true);
+    const [open, setOpen] = React.useState(false);
     const [dialogOpen, setDialogOpen] = React.useState(false);  //this state is for the dialog box that will open when the 'create folder' button is clicked
     const [filedialogOpen, setFiledialogOpen] = React.useState(false);  //this state is for the dialog box that will open when the 'upload file' button is clicked
 
@@ -110,27 +112,27 @@ const Dashboard = ({page}) => {
 
     const getUserDetails = async () => {
         const response = await fetch(`${process.env.REACT_APP_SERVER_DOMAIN}/auth/getUser`, {
-          method: 'POST',
-    
-          headers: {
-            "auth-token": localStorage.getItem("token")
-          },
-    
+            method: 'POST',
+
+            headers: {
+                "auth-token": localStorage.getItem("token")
+            },
+
         });
         const json = await response.json();
         const name = json.name;
         const name_arr = name.split(" ");
-        const firstname_firstcharacter=name_arr[0][0].toUpperCase();
-        const lastname_firstcharacter=name_arr[name_arr.length-1][0].toUpperCase();
+        const firstname_firstcharacter = name_arr[0][0].toUpperCase();
+        const lastname_firstcharacter = name_arr[name_arr.length - 1][0].toUpperCase();
         setUser(firstname_firstcharacter + lastname_firstcharacter);
     }
 
-    useEffect(()=>{
+    useEffect(() => {
 
-        if(localStorage.getItem("token")){
+        if (localStorage.getItem("token")) {
             getUserDetails();
         }
-    },[]);
+    }, []);
 
     return (
         <>
@@ -166,6 +168,24 @@ const Dashboard = ({page}) => {
                                 MyDrive
                             </Typography>
 
+                            {/* <Paper
+                                component="form"
+                                sx={{ p: '2px 4px', display: 'flex', alignItems: 'center', width: 400 }}
+                            >
+                                <IconButton sx={{ p: '10px' }} aria-label="menu">
+                                </IconButton>
+                                <InputBase onClick={(e)=>{setQuery(e.target.value)}}
+                                    sx={{ ml: 1, flex: 1 }}
+                                    placeholder="Search"
+                                    inputProps={{ 'aria-label': 'search' }}
+                                />
+                                <IconButton type="button" sx={{ p: '10px' }} aria-label="search">
+                                    <SearchIcon />
+                                </IconButton>
+                                <IconButton color="primary" sx={{ p: '10px' }} aria-label="directions">
+                                </IconButton>
+                            </Paper> */}
+
                             {
                                 (localStorage.getItem("token") ?
 
@@ -178,7 +198,7 @@ const Dashboard = ({page}) => {
                                 )
                             }
 
-                            <NavLink style={{color: 'inherit', textDecoration: 'inherit'}}  to="/profile"><Avatar sx={{ bgcolor: deepPurple[500] }} >{user}</Avatar></NavLink>
+                            <NavLink style={{ color: 'inherit', textDecoration: 'inherit' }} to="/profile"><Avatar sx={{ bgcolor: deepPurple[500] }} >{user}</Avatar></NavLink>
 
                         </Toolbar>
                     </AppBar>
@@ -193,20 +213,20 @@ const Dashboard = ({page}) => {
                         >
 
 
-                            <Box sx={{display: 'flex',flexDirection: 'column', my: '0.5rem'}}>
+                            <Box sx={{ display: 'flex', flexDirection: 'column', my: '0.5rem' }}>
 
-                            <Button
-                                id="demo-customized-button"
-                                aria-controls={addMenuOpen ? 'demo-customized-menu' : undefined}
-                                aria-haspopup="true"
-                                aria-expanded={addMenuOpen ? 'true' : undefined}
-                                variant="outlined"
-                                disableElevation
-                                onClick={handleClick}
-                                endIcon={<KeyboardArrowDownIcon />}
-                            >
-                                New
-                            </Button>
+                                <Button
+                                    id="demo-customized-button"
+                                    aria-controls={addMenuOpen ? 'demo-customized-menu' : undefined}
+                                    aria-haspopup="true"
+                                    aria-expanded={addMenuOpen ? 'true' : undefined}
+                                    variant="outlined"
+                                    disableElevation
+                                    onClick={handleClick}
+                                    endIcon={<KeyboardArrowDownIcon />}
+                                >
+                                    New
+                                </Button>
                             </Box>
 
 
@@ -223,18 +243,18 @@ const Dashboard = ({page}) => {
                         </List>
                     </Drawer>
                     {
-                        page==="home" && <Dashbody />
+                        page === "home" && <Dashbody />
                     }
                     {
-                        page==="starred" && <StarredBody/>
+                        page === "starred" && <StarredBody />
                     }
-                    
+
                 </Box>
             </ThemeProvider>
 
             <FormDialog open={dialogOpen} setOpen={setDialogOpen} purpose="Create" item="folder" />
-            <FileDialog open={filedialogOpen} setOpen={setFiledialogOpen}/>
-            <AddMenu open={addMenuOpen} anchorEl={anchorEl} setAnchorEl={setAnchorEl} setFiledialogOpen={setFiledialogOpen} setFolderdialogOpen={setDialogOpen}/>
+            <FileDialog open={filedialogOpen} setOpen={setFiledialogOpen} />
+            <AddMenu open={addMenuOpen} anchorEl={anchorEl} setAnchorEl={setAnchorEl} setFiledialogOpen={setFiledialogOpen} setFolderdialogOpen={setDialogOpen} />
         </>
     );
 }

@@ -1,4 +1,4 @@
-import React, { useContext, useEffect } from 'react'
+import React, { useContext, useEffect,useState } from 'react'
 import Container from '@mui/material/Container';
 import Grid from '@mui/material/Grid';
 import { NavLink } from 'react-router-dom';
@@ -16,7 +16,9 @@ import { Button } from '@mui/material';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
 import { useTheme } from '@mui/material/styles';
-
+import InputBase from '@mui/material/InputBase';
+import SearchIcon from '@mui/icons-material/Search';
+import IconButton from '@mui/material/IconButton';
 
 
 const Item = styled(Paper)(({ theme }) => ({
@@ -32,8 +34,8 @@ const Item = styled(Paper)(({ theme }) => ({
 const StarredBody = () => {
 
 
-    const [contextMenu, setContextMenu] = React.useState(null);
-
+    const [contextMenu, setContextMenu] = useState(null);
+    const [query, setQuery] = useState("");
 
     const handleContextMenu = (event) => {
         event.preventDefault();
@@ -73,10 +75,10 @@ const StarredBody = () => {
 
 
     useEffect(() => {
-        fetchStarredFiles();
-        fetchStarredFolders();
+        fetchStarredFiles(query);
+        fetchStarredFolders(query);
 
-    }, [])
+    }, [query])
 
 
     return (
@@ -93,6 +95,28 @@ const StarredBody = () => {
             }}
         >
             <Toolbar />
+
+            <Container maxWidth="lg" sx={{ mt: 4, mb: 4,display: 'flex', alignItems: 'center',justifyContent:'center' }}>
+
+                <Paper
+                    component="form"
+                    sx={{ p: '2px 4px', display: 'flex', alignItems: 'center', width: 400 }}
+                >
+                    <IconButton sx={{ p: '10px' }} aria-label="menu">
+                    </IconButton>
+                    <InputBase onChange={(e) => { setQuery(e.target.value) }}
+                        sx={{ ml: 1, flex: 1 }}
+                        placeholder="Search"
+                        inputProps={{ 'aria-label': 'search' }}
+                    />
+                    <IconButton type="button" sx={{ p: '10px' }} aria-label="search">
+                        <SearchIcon />
+                    </IconButton>
+                    <IconButton color="primary" sx={{ p: '10px' }} aria-label="directions">
+                    </IconButton>
+                </Paper>
+            </Container>
+
             <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
 
                 <Typography variant="h5" gutterBottom>

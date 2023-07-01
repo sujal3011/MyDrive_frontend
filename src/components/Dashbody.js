@@ -24,6 +24,10 @@ import CardActions from '@mui/material/CardActions';
 import CardContent from '@mui/material/CardContent';
 import CardMedia from '@mui/material/CardMedia';
 import { useTheme } from '@mui/material/styles';
+import InputBase from '@mui/material/InputBase';
+import SearchIcon from '@mui/icons-material/Search';
+import IconButton from '@mui/material/IconButton';
+
 
 
 const Item = styled(Paper)(({ theme }) => ({
@@ -53,6 +57,8 @@ const Dashbody = () => {
     const [contextFolder, setContextFolder] = useState("");  // This state will store the id of the folder that will be right clicked
     const [contextFile, setContextFile] = useState("");      // This state will store the id of the file that will be right clicked
 
+    const [query, setQuery] = useState("");
+
     const handleCloseFile = () => {
         setContextMenufile(null);
     };
@@ -70,15 +76,15 @@ const Dashbody = () => {
 
     useEffect(() => {
         if (localStorage.getItem("token")) {
-            getFolders(window.location.pathname);
-            getFilesbyPath(window.location.pathname);
+            getFolders(window.location.pathname,query);
+            getFilesbyPath(window.location.pathname,query);
 
         }
         else {
             navigate('/login');
         }
 
-    }, [window.location.pathname])
+    }, [window.location.pathname,query])
 
 
     return (
@@ -95,13 +101,36 @@ const Dashbody = () => {
             }}
         >
             <Toolbar />
+
+            <Container maxWidth="lg" sx={{ mt: 4, mb: 4,display: 'flex', alignItems: 'center',justifyContent:'center' }}>
+
+                <Paper
+                    component="form"
+                    sx={{ p: '2px 4px', display: 'flex', alignItems: 'center', width: {xs: '100%', sm: '70%'}}}
+                >
+                    <IconButton sx={{ p: '10px' }} aria-label="menu">
+                    </IconButton>
+                    <InputBase onChange={(e) => { setQuery(e.target.value) }}
+                        sx={{ ml: 1, flex: 1 }}
+                        placeholder="Search"
+                        inputProps={{ 'aria-label': 'search' }}
+                    />
+                    <IconButton type="button" sx={{ p: '10px' }} aria-label="search">
+                        <SearchIcon />
+                    </IconButton>
+                    <IconButton color="primary" sx={{ p: '10px' }} aria-label="directions">
+                    </IconButton>
+                </Paper>
+            </Container>
+
             <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
+
 
                 <Typography variant="h5" gutterBottom>
                     Folders
                 </Typography>
 
-                <Grid container spacing={2} sx={{ display: "flex",justifyContent: { xs:"center",lg:"start"}, alignItems: 'center', my: "0.5rem" }}>
+                <Grid container spacing={2} sx={{ display: "flex", justifyContent: { xs: "center", lg: "start" }, alignItems: 'center', my: "0.5rem" }}>
                     {
                         folders.map((item) => {
 
@@ -134,8 +163,8 @@ const Dashbody = () => {
                                             <NavLink to={`/folders/${item._id}`} style={{ color: 'inherit', textDecoration: 'inherit' }}>
                                                 <Item sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', cursor: "pointer" }}>
 
-                                                    <FolderOpenOutlinedIcon fontSize='large' sx={{ mx: "0.5rem",width:'20%' }} />
-                                                    <Chip label={`${item.name}`} variant="outlined" sx={{ mx: "0.5rem",width:'80%' }} />
+                                                    <FolderOpenOutlinedIcon fontSize='large' sx={{ mx: "0.5rem", width: '20%' }} />
+                                                    <Chip label={`${item.name}`} variant="outlined" sx={{ mx: "0.5rem", width: '80%' }} />
 
                                                 </Item>
                                             </NavLink>
@@ -151,19 +180,20 @@ const Dashbody = () => {
                 </Grid>
 
             </Container>
+            
             <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
 
                 <Typography variant="h5" gutterBottom>
                     Files
                 </Typography>
 
-                <Grid container spacing={2} sx={{ display: "flex", my: "0.5rem",justifyContent: { xs:"center",lg:"start"}, alignItems: 'center' }}>
+                <Grid container spacing={2} sx={{ display: "flex", my: "0.5rem", justifyContent: { xs: "center", lg: "start" }, alignItems: 'center' }}>
                     {
                         files.map((item) => {
                             return (
 
 
-                                <Box key={item._id} sx={{ mx: "0.5rem", my: "0.5rem",width: { xs: '100%',  sm: '40%',lg: '20%'} }}
+                                <Box key={item._id} sx={{ mx: "0.5rem", my: "0.5rem", width: { xs: '100%', sm: '40%', lg: '20%' } }}
 
                                     onContextMenu={e => {
                                         e.preventDefault();
@@ -207,8 +237,8 @@ const Dashbody = () => {
                                                 :
                                                 <Item sx={{ display: 'flex', justifyContent: 'start', alignItems: 'center', cursor: "pointer", textDecoration: "none" }}>
 
-                                                    <FolderOpenOutlinedIcon fontSize='large' sx={{ mx: "0.5rem",width:'20%' }} />
-                                                    <Chip sx={{ mx: "0.5rem",width:'80%' }} label={`${item.original_name}`} variant="contained" />
+                                                    <FolderOpenOutlinedIcon fontSize='large' sx={{ mx: "0.5rem", width: '20%' }} />
+                                                    <Chip sx={{ mx: "0.5rem", width: '80%' }} label={`${item.original_name}`} variant="contained" />
 
                                                 </Item>
                                         }

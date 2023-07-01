@@ -94,9 +94,9 @@ const FileState = (props) => {
 
     // ROUTE-4  getting all files by path
 
-    const getFilesbyPath=async (pathname)=>{
+    const getFilesbyPath=async (pathname,query)=>{
 
-        const response = await fetch(`${host}/files/getfilesbypath`, {
+        const response = await fetch(`${host}/files/getfilesbypath?query=${query}`, {
             method: 'GET', 
             headers: {
                 'Content-Type': 'application/json',
@@ -125,8 +125,8 @@ const FileState = (props) => {
 
     // ROUTE-6  fetching all starred files
 
-    const fetchStarredFiles=async ()=>{
-        const response = await fetch(`${host}/files/fetchstarredfiles`, {
+    const fetchStarredFiles=async (query)=>{
+        const response = await fetch(`${host}/files/fetchstarredfiles?query=${query}`, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
