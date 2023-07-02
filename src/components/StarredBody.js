@@ -1,4 +1,4 @@
-import React, { useContext, useEffect,useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import Container from '@mui/material/Container';
 import Grid from '@mui/material/Grid';
 import { NavLink } from 'react-router-dom';
@@ -19,6 +19,10 @@ import { useTheme } from '@mui/material/styles';
 import InputBase from '@mui/material/InputBase';
 import SearchIcon from '@mui/icons-material/Search';
 import IconButton from '@mui/material/IconButton';
+import RenameFolderDialog from './RenameFolderDialog';
+import RenameFileDialog from './RenameFileDialog';
+import FolderContextMenu from './FolderContextMenu';
+import FileContextMenu from './FileContextMenu';
 
 
 const Item = styled(Paper)(({ theme }) => ({
@@ -33,44 +37,42 @@ const Item = styled(Paper)(({ theme }) => ({
 
 const StarredBody = () => {
 
-
-    const [contextMenu, setContextMenu] = useState(null);
     const [query, setQuery] = useState("");
 
-    const handleContextMenu = (event) => {
-        event.preventDefault();
-        setContextMenu(
-            contextMenu === null
-                ? {
-                    mouseX: event.clientX + 2,
-                    mouseY: event.clientY - 6,
-                }
-                :
-                null,
-        );
-    };
+    const [contextMenufolder, setContextMenufolder] = React.useState(null);
+    const [contextMenufile, setContextMenufile] = React.useState(null);
 
-    const handleClose = () => {
-        setContextMenu(null);
+    const [dialogOpenfolder, setDialogOpenfolder] = React.useState(false);
+    const [dialogOpenfile, setDialogOpenfile] = React.useState(false);
+
+    const [contextFolder, setContextFolder] = useState("");
+    const [contextFile, setContextFile] = useState("");
+
+   
+    const handleCloseFile = () => {
+        setContextMenufile(null);
+    };
+    const handleCloseFolder = () => {
+        setContextMenufolder(null);
     };
 
 
     const filecontext = useContext(fileContext);
-    const { files,fetchStarredFiles,removeFileFromStarred } = filecontext;
+    const { files, fetchStarredFiles, removeFileFromStarred } = filecontext;
 
     const navigate = useNavigate();
     const foldercontext = useContext(folderContext);
 
-    const { folders, fetchStarredFolders,removeFolderFromStarred} = foldercontext;
+    const { folders, fetchStarredFolders, removeFolderFromStarred } = foldercontext;
 
     const handleFileStarRemove = (id) => {
         removeFileFromStarred(id);
-        setContextMenu(null);
+        setContextMenufile(null);
     }
 
     const handleFolderStarRemove = (id) => {
         removeFolderFromStarred(id);
-        setContextMenu(null);
+        setContextMenufolder(null);
     }
 
 
@@ -96,7 +98,7 @@ const StarredBody = () => {
         >
             <Toolbar />
 
-            <Container maxWidth="lg" sx={{ mt: 4, mb: 4,display: 'flex', alignItems: 'center',justifyContent:'center' }}>
+            <Container maxWidth="lg" sx={{ mt: 4, mb: 4, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
 
                 <Paper
                     component="form"
@@ -123,40 +125,42 @@ const StarredBody = () => {
                     Folders
                 </Typography>
 
-                <Grid container spacing={2} sx={{ display: "flex",justifyContent: { xs:"center",lg:"start"}, alignItems: 'center', my: "0.5rem"  }}>
+                <Grid container spacing={2} sx={{ display: "flex", justifyContent: { xs: "center", lg: "start" }, alignItems: 'center', my: "0.5rem" }}>
                     {
                         folders.map((item) => {
 
                             return (
 
-                                <Box sx={{ m: "0.5rem",width: {xs: '100%',sm: '40%',lg: '20%',}, }} key={item._id} >
+                                <Box sx={{
+                                    m: "0.5rem", width: {
+                                        xs: '100%', // 100% width on small screens
+                                        sm: '40%', // 40% width on medium screens
+                                        lg: '20%', // 20% width on large screens
+                                    },
+                                }} key={item._id}
+                                    onContextMenu={e => {
+                                        e.preventDefault();
+                                        setContextMenufolder(
+                                            contextMenufolder === null
+                                                ? {
+                                                    mouseX: e.clientX + 2,
+                                                    mouseY: e.clientY - 6,
+                                                }
+                                                :
+                                                null,
+                                        );
+                                        setContextFolder(item._id);
 
-                                    <Grid item xs={2} onContextMenu={handleContextMenu} style={{ cursor: 'context-menu', maxWidth: "100%" }}>
+                                    }}>
+
+                                    <Grid item xs={2}  style={{ cursor: 'context-menu', maxWidth: "100%" }}>
                                         <NavLink to={`/folders/${item._id}`}><Item sx={{ display: 'flex', justifyContent: 'start', alignItems: 'center', cursor: "pointer" }}>
 
-                                            <FolderOpenOutlinedIcon fontSize='large' sx={{ mx: "0.5rem",width:'20%' }} />
-                                            <Chip label={`${item.name}`} variant="outlined" sx={{ mx: "0.5rem",width:'80%' }} />
+                                            <FolderOpenOutlinedIcon fontSize='large' sx={{ mx: "0.5rem", width: '20%' }} />
+                                            <Chip label={`${item.name}`} variant="outlined" sx={{ mx: "0.5rem", width: '80%' }} />
 
                                         </Item></NavLink>
                                     </Grid>
-
-                                    <Menu
-                                        open={contextMenu !== null}
-                                        onClose={handleClose}
-                                        anchorReference="anchorPosition"
-                                        anchorPosition={
-                                            contextMenu !== null
-                                                ? { top: contextMenu.mouseY, left: contextMenu.mouseX }
-                                                : undefined
-                                        }
-                                    >
-                                        <MenuItem onClick={handleClose}>Rename</MenuItem>
-                                        <MenuItem onClick={handleClose}>Delete</MenuItem>
-                                        <MenuItem onClick={handleClose}>Share</MenuItem>
-                                        <MenuItem onClick={handleClose}>Download</MenuItem>
-                                        <MenuItem onClick={()=>{handleFolderStarRemove(item._id)}}>Remove from Starred</MenuItem>
-                                    </Menu>
-
                                 </Box>
 
                             )
@@ -164,9 +168,11 @@ const StarredBody = () => {
 
                         })
                     }
+
+                    <RenameFolderDialog open={dialogOpenfolder} setOpen={setDialogOpenfolder} folder_id={contextFolder} />
+                    <FolderContextMenu contextMenufolder={contextMenufolder} setContextMenufolder={setContextMenufolder} handleCloseFolder={handleCloseFolder} setDialogOpenfolder={setDialogOpenfolder} folder_id={contextFolder}></FolderContextMenu>
+
                 </Grid>
-
-
 
             </Container>
 
@@ -177,46 +183,50 @@ const StarredBody = () => {
                     Files
                 </Typography>
 
-                <Grid container spacing={2} sx={{ display: "flex", my: "0.5rem",justifyContent: { xs:"center",lg:"start"}, alignItems: 'center' }}>
+                <Grid container spacing={2} sx={{ display: "flex", my: "0.5rem", justifyContent: { xs: "center", lg: "start" }, alignItems: 'center' }}>
                     {
                         files.map((item) => {
                             return (
 
 
-                                <Box key={item._id} sx={{ mx: "0.5rem", my: "0.5rem",width: {xs: '100%', sm: '40%',lg: '20%'}, }}>
-                                    <Grid item xs={3} onContextMenu={handleContextMenu} style={{ cursor: 'context-menu', width: "100%", maxWidth: "100%" }} >
+                                <Box key={item._id} sx={{ mx: "0.5rem", my: "0.5rem", width: { xs: '100%', sm: '40%', lg: '20%' } }}
+
+                                    onContextMenu={e => {
+                                        e.preventDefault();
+                                        setContextMenufile(
+                                            contextMenufile === null
+                                                ? {
+                                                    mouseX: e.clientX + 2,
+                                                    mouseY: e.clientY - 6,
+                                                }
+                                                :
+                                                null,
+                                        );
+                                        setContextFile(item._id);
+
+                                    }}
+                                >
+
+
+                                    <Grid item xs={3} style={{ cursor: 'context-menu', width: "100%", maxWidth: "100%" }} >
                                         <NavLink to="/"><Item sx={{ display: 'flex', justifyContent: 'start', alignItems: 'center', cursor: "pointer", textDecoration: "none" }}>
 
-                                            <FolderOpenOutlinedIcon fontSize='large' sx={{ mx: "0.5rem",width:'20%'}} />
-                                            <Chip sx={{ mx: "0.5rem",width:'80%'  }} label={`${item.original_name}`} variant="contained" />
+                                            <FolderOpenOutlinedIcon fontSize='large' sx={{ mx: "0.5rem", width: '20%' }} />
+                                            <Chip sx={{ mx: "0.5rem", width: '80%' }} label={`${item.original_name}`} variant="contained" />
 
                                         </Item></NavLink>
                                     </Grid>
 
-                                    <Menu
-                                        open={contextMenu !== null}
-                                        onClose={handleClose}
-                                        anchorReference="anchorPosition"
-                                        anchorPosition={
-                                            contextMenu !== null
-                                                ? { top: contextMenu.mouseY, left: contextMenu.mouseX }
-                                                : undefined
-                                        }
-                                    >
-                                        <MenuItem onClick={handleClose}>Rename</MenuItem>
-                                        <MenuItem onClick={handleClose}>Delete</MenuItem>
-                                        <MenuItem onClick={handleClose}>Share</MenuItem>
-                                        <MenuItem onClick={handleClose}>Download</MenuItem>
-                                        <MenuItem onClick={()=>{handleFileStarRemove(item._id)}}>Remove from Starred</MenuItem>
-                                    </Menu>
-
-
+                                   
                                 </Box>
 
 
                             )
                         })
                     }
+
+                    <RenameFileDialog open={dialogOpenfile} setOpen={setDialogOpenfile} file_id={contextFile} />
+                    <FileContextMenu contextMenufile={contextMenufile} setContextMenufile={setContextMenufile} handleCloseFile={handleCloseFile} setDialogOpenfile={setDialogOpenfile} file_id={contextFile}></FileContextMenu>
                 </Grid>
 
 
