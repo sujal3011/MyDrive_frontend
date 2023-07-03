@@ -17,8 +17,6 @@ import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
 import RenameFolderDialog from './RenameFolderDialog';
 import RenameFileDialog from './RenameFileDialog';
-import FolderContextMenu from './FolderContextMenu';
-import FileContextMenu from './FileContextMenu';
 import Card from '@mui/material/Card';
 import CardActions from '@mui/material/CardActions';
 import CardContent from '@mui/material/CardContent';
@@ -27,7 +25,9 @@ import { useTheme } from '@mui/material/styles';
 import InputBase from '@mui/material/InputBase';
 import SearchIcon from '@mui/icons-material/Search';
 import IconButton from '@mui/material/IconButton';
-
+import MoreVertIcon from '@mui/icons-material/MoreVert';
+import FolderMenu from './FolderMenu';
+import FileMenu from './FileMenu';
 
 
 const Item = styled(Paper)(({ theme }) => ({
@@ -43,11 +43,6 @@ const Item = styled(Paper)(({ theme }) => ({
 const Dashbody = () => {
 
     const host = process.env.REACT_APP_SERVER_DOMAIN;
-    const theme = useTheme();
-
-
-    const [contextMenufolder, setContextMenufolder] = React.useState(null);
-    const [contextMenufile, setContextMenufile] = React.useState(null);
 
     const [dialogOpenfolder, setDialogOpenfolder] = React.useState(false);  //this state is for the dialog box to rename the folder
     const [dialogOpenfile, setDialogOpenfile] = React.useState(false);  //this state is for the dialog box to rename the file
@@ -58,12 +53,6 @@ const Dashbody = () => {
 
     const [query, setQuery] = useState("");
 
-    const handleCloseFile = () => {
-        setContextMenufile(null);
-    };
-    const handleCloseFolder = () => {
-        setContextMenufolder(null);
-    };
 
     const filecontext = useContext(fileContext);
     const { files, getFilesbyPath, addToStarred, deleteFile, displayImageFile } = filecontext;
@@ -73,17 +62,24 @@ const Dashbody = () => {
 
     const { folders, getFolders, addFolderToStarred, deleteFolder } = foldercontext;
 
+    const [anchorElfolder, setAnchorElfolder] = React.useState(null);
+    const openfoldermenu = Boolean(anchorElfolder);
+
+    const [anchorElfile, setAnchorElfile] = React.useState(null);
+    const openfilemenu = Boolean(anchorElfile);
+
+
     useEffect(() => {
         if (localStorage.getItem("token")) {
-            getFolders(window.location.pathname,query);
-            getFilesbyPath(window.location.pathname,query);
+            getFolders(window.location.pathname, query);
+            getFilesbyPath(window.location.pathname, query);
 
         }
         else {
             navigate('/login');
         }
 
-    }, [window.location.pathname,query])
+    }, [window.location.pathname, query])
 
 
     return (
@@ -101,11 +97,11 @@ const Dashbody = () => {
         >
             <Toolbar />
 
-            <Container maxWidth="lg" sx={{ mt: 4, mb: 4,display: 'flex', alignItems: 'center',justifyContent:'center' }}>
+            <Container maxWidth="lg" sx={{ mt: 4, mb: 4, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
 
                 <Paper
                     component="form"
-                    sx={{ p: '2px 4px', display: 'flex', alignItems: 'center', width: {xs: '100%', sm: '70%'}}}
+                    sx={{ p: '2px 4px', display: 'flex', alignItems: 'center', width: { xs: '100%', sm: '70%' } }}
                 >
                     <IconButton sx={{ p: '10px' }} aria-label="menu">
                     </IconButton>
@@ -137,7 +133,7 @@ const Dashbody = () => {
                                 <>
 
                                     <Box sx={{
-                                        m: "0.5rem", width: {
+                                        m: "0.5rem", backgroundColor: "white", width: {
                                             xs: '100%', // 100% width on small screens
                                             sm: '40%', // 40% width on medium screens
                                             lg: '20%', // 20% width on large screens
@@ -145,21 +141,14 @@ const Dashbody = () => {
                                     }} key={item._id}
                                         onContextMenu={e => {
                                             e.preventDefault();
-                                            setContextMenufolder(
-                                                contextMenufolder === null
-                                                    ? {
-                                                        mouseX: e.clientX + 2,
-                                                        mouseY: e.clientY - 6,
-                                                    }
-                                                    :
-                                                    null,
-                                            );
+                                            setAnchorElfolder(e.currentTarget);
                                             setContextFolder(item._id);
 
                                         }}>
 
-                                        <Grid item xs={2} style={{ cursor: 'context-menu', maxWidth: "100%" }}>
-                                            <NavLink to={`/folders/${item._id}`} style={{ color: 'inherit', textDecoration: 'inherit' }}>
+                                        <Grid item xs={2} sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }} style={{ cursor: 'context-menu', maxWidth: "100%" }}>
+
+                                            <NavLink to={`/folders/${item._id}`} style={{ color: 'inherit', textDecoration: 'inherit', width: '100%' }}>
                                                 <Item sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', cursor: "pointer" }}>
 
                                                     <FolderOpenOutlinedIcon fontSize='large' sx={{ mx: "0.5rem", width: '20%' }} />
@@ -167,6 +156,21 @@ const Dashbody = () => {
 
                                                 </Item>
                                             </NavLink>
+
+                                            <IconButton
+                                                aria-label="more"
+                                                id="long-button"
+                                                aria-controls={openfoldermenu ? 'long-menu' : undefined}
+                                                aria-expanded={openfoldermenu ? 'true' : undefined}
+                                                aria-haspopup="true"
+                                                onClick={(event) => {
+                                                    setAnchorElfolder(event.currentTarget);
+                                                    setContextFolder(item._id);
+                                                }}
+                                            >
+                                                <MoreVertIcon />
+                                            </IconButton>
+
                                         </Grid>
                                     </Box>
 
@@ -175,11 +179,12 @@ const Dashbody = () => {
                         })
                     }
                     <RenameFolderDialog open={dialogOpenfolder} setOpen={setDialogOpenfolder} folder_id={contextFolder} />
-                    <FolderContextMenu contextMenufolder={contextMenufolder} setContextMenufolder={setContextMenufolder} handleCloseFolder={handleCloseFolder} setDialogOpenfolder={setDialogOpenfolder} folder_id={contextFolder}></FolderContextMenu>
+
+                    <FolderMenu open={openfoldermenu} anchorEl={anchorElfolder} setAnchorEl={setAnchorElfolder} setDialogOpenfolder={setDialogOpenfolder} folder_id={contextFolder} />
                 </Grid>
 
             </Container>
-            
+
             <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
 
                 <Typography variant="h5" gutterBottom>
@@ -192,24 +197,16 @@ const Dashbody = () => {
                             return (
 
 
-                                <Box key={item._id} sx={{ mx: "0.5rem", my: "0.5rem", width: { xs: '100%', sm: '40%', lg: '20%' } }}
+                                <Box key={item._id} sx={{ mx: "0.5rem", my: "0.5rem", width: { xs: '100%', sm: '40%', lg: '20%' },backgroundColor: "white" }}
 
                                     onContextMenu={e => {
                                         e.preventDefault();
-                                        setContextMenufile(
-                                            contextMenufile === null
-                                                ? {
-                                                    mouseX: e.clientX + 2,
-                                                    mouseY: e.clientY - 6,
-                                                }
-                                                :
-                                                null,
-                                        );
+                                        setAnchorElfile(e.currentTarget);
                                         setContextFile(item._id);
 
                                     }}
                                 >
-                                    <Grid item xs={3} style={{ cursor: 'context-menu', width: "100%", maxWidth: "100%" }} >
+                                    <Grid sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }} item xs={3} style={{ cursor: 'context-menu', width: "100%", maxWidth: "100%" }} >
 
                                         {
                                             (item.file_type === 'image/svg+xml' || item.file_type === 'image/png' || item.file_type === 'image/jpeg')
@@ -234,13 +231,27 @@ const Dashbody = () => {
                                                 </a>
 
                                                 :
-                                                <Item sx={{ display: 'flex', justifyContent: 'start', alignItems: 'center', cursor: "pointer", textDecoration: "none" }}>
+                                                <Item sx={{ display: 'flex', justifyContent: 'start', alignItems: 'center', cursor: "pointer", textDecoration: "none", width: '100%' }}>
 
                                                     <FolderOpenOutlinedIcon fontSize='large' sx={{ mx: "0.5rem", width: '20%' }} />
                                                     <Chip sx={{ mx: "0.5rem", width: '80%' }} label={`${item.original_name}`} variant="contained" />
 
                                                 </Item>
                                         }
+
+                                        <IconButton
+                                            aria-label="more"
+                                            id="long-button"
+                                            aria-controls={openfoldermenu ? 'long-menu' : undefined}
+                                            aria-expanded={openfoldermenu ? 'true' : undefined}
+                                            aria-haspopup="true"
+                                            onClick={(event) => {
+                                                setAnchorElfile(event.currentTarget);
+                                                setContextFile(item._id);
+                                            }}
+                                        >
+                                            <MoreVertIcon />
+                                        </IconButton>
 
                                     </Grid>
 
@@ -250,7 +261,9 @@ const Dashbody = () => {
                         })
                     }
                     <RenameFileDialog open={dialogOpenfile} setOpen={setDialogOpenfile} file_id={contextFile} />
-                    <FileContextMenu contextMenufile={contextMenufile} setContextMenufile={setContextMenufile} handleCloseFile={handleCloseFile} setDialogOpenfile={setDialogOpenfile} file_id={contextFile}></FileContextMenu>
+
+                    <FileMenu open={openfilemenu} anchorEl={anchorElfile} setAnchorEl={setAnchorElfile} setDialogOpenfile={setDialogOpenfile} file_id={contextFile} />
+
                 </Grid>
 
             </Container>

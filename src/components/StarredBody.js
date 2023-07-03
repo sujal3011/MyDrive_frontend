@@ -21,8 +21,9 @@ import SearchIcon from '@mui/icons-material/Search';
 import IconButton from '@mui/material/IconButton';
 import RenameFolderDialog from './RenameFolderDialog';
 import RenameFileDialog from './RenameFileDialog';
-import FolderContextMenu from './FolderContextMenu';
-import FileContextMenu from './FileContextMenu';
+import FileMenu from './FileMenu';
+import FolderMenu from './FolderMenu';
+import MoreVertIcon from '@mui/icons-material/MoreVert';
 
 
 const Item = styled(Paper)(({ theme }) => ({
@@ -39,22 +40,12 @@ const StarredBody = () => {
 
     const [query, setQuery] = useState("");
 
-    const [contextMenufolder, setContextMenufolder] = React.useState(null);
-    const [contextMenufile, setContextMenufile] = React.useState(null);
-
     const [dialogOpenfolder, setDialogOpenfolder] = React.useState(false);
     const [dialogOpenfile, setDialogOpenfile] = React.useState(false);
 
     const [contextFolder, setContextFolder] = useState("");
     const [contextFile, setContextFile] = useState("");
 
-   
-    const handleCloseFile = () => {
-        setContextMenufile(null);
-    };
-    const handleCloseFolder = () => {
-        setContextMenufolder(null);
-    };
 
 
     const filecontext = useContext(fileContext);
@@ -65,15 +56,12 @@ const StarredBody = () => {
 
     const { folders, fetchStarredFolders, removeFolderFromStarred } = foldercontext;
 
-    const handleFileStarRemove = (id) => {
-        removeFileFromStarred(id);
-        setContextMenufile(null);
-    }
+    const [anchorElfolder, setAnchorElfolder] = React.useState(null);
+    const openfoldermenu = Boolean(anchorElfolder);
 
-    const handleFolderStarRemove = (id) => {
-        removeFolderFromStarred(id);
-        setContextMenufolder(null);
-    }
+    const [anchorElfile, setAnchorElfile] = React.useState(null);
+    const openfilemenu = Boolean(anchorElfile);
+
 
 
     useEffect(() => {
@@ -132,7 +120,7 @@ const StarredBody = () => {
                             return (
 
                                 <Box sx={{
-                                    m: "0.5rem", width: {
+                                    m: "0.5rem",backgroundColor: "white", width: {
                                         xs: '100%', // 100% width on small screens
                                         sm: '40%', // 40% width on medium screens
                                         lg: '20%', // 20% width on large screens
@@ -140,26 +128,33 @@ const StarredBody = () => {
                                 }} key={item._id}
                                     onContextMenu={e => {
                                         e.preventDefault();
-                                        setContextMenufolder(
-                                            contextMenufolder === null
-                                                ? {
-                                                    mouseX: e.clientX + 2,
-                                                    mouseY: e.clientY - 6,
-                                                }
-                                                :
-                                                null,
-                                        );
+                                        setAnchorElfolder(e.currentTarget);
                                         setContextFolder(item._id);
 
                                     }}>
 
-                                    <Grid item xs={2}  style={{ cursor: 'context-menu', maxWidth: "100%" }}>
-                                        <NavLink to={`/folders/${item._id}`}><Item sx={{ display: 'flex', justifyContent: 'start', alignItems: 'center', cursor: "pointer" }}>
+                                    <Grid item xs={2} sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }} style={{ cursor: 'context-menu', maxWidth: "100%" }}>
+                                        <NavLink to={`/folders/${item._id}`} style={{ color: 'inherit', textDecoration: 'inherit', width: '100%' }}>
+                                            <Item sx={{ display: 'flex', justifyContent: 'start', alignItems: 'center', cursor: "pointer" }}>
 
-                                            <FolderOpenOutlinedIcon fontSize='large' sx={{ mx: "0.5rem", width: '20%' }} />
-                                            <Chip label={`${item.name}`} variant="outlined" sx={{ mx: "0.5rem", width: '80%' }} />
+                                                <FolderOpenOutlinedIcon fontSize='large' sx={{ mx: "0.5rem", width: '20%' }} />
+                                                <Chip label={`${item.name}`} variant="outlined" sx={{ mx: "0.5rem", width: '80%' }} />
 
-                                        </Item></NavLink>
+                                            </Item></NavLink>
+
+                                            <IconButton
+                                                aria-label="more"
+                                                id="long-button"
+                                                aria-controls={openfoldermenu ? 'long-menu' : undefined}
+                                                aria-expanded={openfoldermenu ? 'true' : undefined}
+                                                aria-haspopup="true"
+                                                onClick={(event) => {
+                                                    setAnchorElfolder(event.currentTarget);
+                                                    setContextFolder(item._id);
+                                                }}
+                                            >
+                                                <MoreVertIcon />
+                                            </IconButton>
                                     </Grid>
                                 </Box>
 
@@ -170,7 +165,7 @@ const StarredBody = () => {
                     }
 
                     <RenameFolderDialog open={dialogOpenfolder} setOpen={setDialogOpenfolder} folder_id={contextFolder} />
-                    <FolderContextMenu contextMenufolder={contextMenufolder} setContextMenufolder={setContextMenufolder} handleCloseFolder={handleCloseFolder} setDialogOpenfolder={setDialogOpenfolder} folder_id={contextFolder}></FolderContextMenu>
+                    <FolderMenu open={openfoldermenu} anchorEl={anchorElfolder} setAnchorEl={setAnchorElfolder} setDialogOpenfolder={setDialogOpenfolder} folder_id={contextFolder} />
 
                 </Grid>
 
@@ -189,35 +184,42 @@ const StarredBody = () => {
                             return (
 
 
-                                <Box key={item._id} sx={{ mx: "0.5rem", my: "0.5rem", width: { xs: '100%', sm: '40%', lg: '20%' } }}
+                                <Box key={item._id} sx={{ mx: "0.5rem", my: "0.5rem", width: { xs: '100%', sm: '40%', lg: '20%' },backgroundColor: "white", }}
 
                                     onContextMenu={e => {
                                         e.preventDefault();
-                                        setContextMenufile(
-                                            contextMenufile === null
-                                                ? {
-                                                    mouseX: e.clientX + 2,
-                                                    mouseY: e.clientY - 6,
-                                                }
-                                                :
-                                                null,
-                                        );
+                                        setAnchorElfile(e.currentTarget);
                                         setContextFile(item._id);
 
                                     }}
                                 >
 
 
-                                    <Grid item xs={3} style={{ cursor: 'context-menu', width: "100%", maxWidth: "100%" }} >
-                                        <NavLink to="/"><Item sx={{ display: 'flex', justifyContent: 'start', alignItems: 'center', cursor: "pointer", textDecoration: "none" }}>
+                                    <Grid item xs={3} sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }} style={{ cursor: 'context-menu', width: "100%", maxWidth: "100%" }} >
+
+                                        <Item sx={{ display: 'flex', justifyContent: 'start', alignItems: 'center', cursor: "pointer", textDecoration: "none" ,width: '100%'}}>
 
                                             <FolderOpenOutlinedIcon fontSize='large' sx={{ mx: "0.5rem", width: '20%' }} />
                                             <Chip sx={{ mx: "0.5rem", width: '80%' }} label={`${item.original_name}`} variant="contained" />
 
-                                        </Item></NavLink>
+                                        </Item>
+
+                                        <IconButton
+                                            aria-label="more"
+                                            id="long-button"
+                                            aria-controls={openfoldermenu ? 'long-menu' : undefined}
+                                            aria-expanded={openfoldermenu ? 'true' : undefined}
+                                            aria-haspopup="true"
+                                            onClick={(event) => {
+                                                setAnchorElfile(event.currentTarget);
+                                                setContextFile(item._id);
+                                            }}
+                                        >
+                                            <MoreVertIcon />
+                                        </IconButton>
                                     </Grid>
 
-                                   
+
                                 </Box>
 
 
@@ -226,7 +228,7 @@ const StarredBody = () => {
                     }
 
                     <RenameFileDialog open={dialogOpenfile} setOpen={setDialogOpenfile} file_id={contextFile} />
-                    <FileContextMenu contextMenufile={contextMenufile} setContextMenufile={setContextMenufile} handleCloseFile={handleCloseFile} setDialogOpenfile={setDialogOpenfile} file_id={contextFile}></FileContextMenu>
+                    <FileMenu open={openfilemenu} anchorEl={anchorElfile} setAnchorEl={setAnchorElfile} setDialogOpenfile={setDialogOpenfile} file_id={contextFile} />
                 </Grid>
 
 
