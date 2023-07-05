@@ -14,6 +14,7 @@ import DriveFileRenameOutlineIcon from '@mui/icons-material/DriveFileRenameOutli
 import DeleteIcon from '@mui/icons-material/Delete';
 import DownloadIcon from '@mui/icons-material/Download';
 import StarIcon from '@mui/icons-material/Star';
+import StarBorderIcon from '@mui/icons-material/StarBorder';
 import ShareIcon from '@mui/icons-material/Share';
 
 const StyledMenu = styled((props) => (
@@ -57,18 +58,18 @@ const StyledMenu = styled((props) => (
   },
 }));
 
-export default function FolderMenu({open,anchorEl,setAnchorEl,setDialogOpenfolder,folder_id}) {
-  
+export default function FolderMenu({ open, anchorEl, setAnchorEl, setDialogOpenfolder, folder,reload,setReload,isStarred}) {
+
   const handleClose = () => {
     setAnchorEl(null);
   };
 
   const foldercontext = useContext(folderContext);
-const {addFolderToStarred,deleteFolder} = foldercontext;
+  const { addFolderToStarred, removeFolderFromStarred, deleteFolder } = foldercontext;
 
   return (
     <div>
-     
+
       <StyledMenu
         id="demo-customized-menu"
         MenuListProps={{
@@ -79,26 +80,45 @@ const {addFolderToStarred,deleteFolder} = foldercontext;
         onClose={handleClose}
       >
         <MenuItem onClick={() => {
-            setDialogOpenfolder(true);
-            setAnchorEl(null);
+          setDialogOpenfolder(true);
+          setAnchorEl(null);
         }} disableRipple>
           <DriveFileRenameOutlineIcon />
           Rename
         </MenuItem>
-        <MenuItem  onClick={() => { 
-                addFolderToStarred(folder_id);
-                setAnchorEl(null);
-            }} disableRipple>
-          <StarIcon/>
-          Add to Starred
-        </MenuItem>
+
+        {
+          folder.isStarred && <MenuItem onClick={() => {
+            setReload(!reload);
+            removeFolderFromStarred(folder.id,isStarred);
+            setAnchorEl(null);
+          }} disableRipple>
+            <StarIcon />
+            Remove from Starred
+          </MenuItem>
+        }
+
+        {
+
+          !folder.isStarred && <MenuItem onClick={() => {
+            setReload(!reload);
+            addFolderToStarred(folder.id);
+            setAnchorEl(null);
+          }} disableRipple>
+            <StarBorderIcon />
+            Add to Starred
+          </MenuItem>
+
+        }
+
+
         <Divider sx={{ my: 0.5 }} />
 
-        <MenuItem onClick={()=>{
-            deleteFolder(folder_id)
-            setAnchorEl(null);
+        <MenuItem onClick={() => {
+          deleteFolder(folder.id)
+          setAnchorEl(null);
         }} disableRipple>
-          <DeleteIcon/>
+          <DeleteIcon />
           Remove
         </MenuItem>
       </StyledMenu>

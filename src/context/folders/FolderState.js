@@ -109,16 +109,13 @@ const FolderState = (props) => {
 
         } catch (error) {
             console.log(error);
-        }
-
-        
+        }  
     }
 
 
     // ROUTE-5  adding a folder to starred
     
     const addFolderToStarred=async (id)=>{
-        console.log("Adding folder to starred");
         const response = await fetch(`${host}/folders/starFolder/${id}`, {
             method: 'PUT',
 
@@ -149,8 +146,8 @@ const FolderState = (props) => {
 
     // ROUTE-7  removing a folder from starred
 
-    const removeFolderFromStarred=async (id)=>{
-        const response = await fetch(`${host}/folder/removestarFolder/${id}`, {
+    const removeFolderFromStarred=async (id,isStarred)=>{
+        const response = await fetch(`${host}/folders/removestarFolder/${id}`, {
             method: 'PUT',
 
             headers: {
@@ -159,8 +156,12 @@ const FolderState = (props) => {
             },
           });
 
-        const updatedFolders=folders.filter(folder=>folder._id!==id);
-        setFolders(updatedFolders);
+        if(isStarred){
+
+            const updatedFolders=folders.filter(folder=>folder._id!==id);
+            setFolders(updatedFolders);
+        }
+
     }
     
 

@@ -14,6 +14,7 @@ import DriveFileRenameOutlineIcon from '@mui/icons-material/DriveFileRenameOutli
 import DeleteIcon from '@mui/icons-material/Delete';
 import DownloadIcon from '@mui/icons-material/Download';
 import StarIcon from '@mui/icons-material/Star';
+import StarBorderIcon from '@mui/icons-material/StarBorder';
 import ShareIcon from '@mui/icons-material/Share';
 
 const StyledMenu = styled((props) => (
@@ -64,7 +65,7 @@ export default function FileMenu({ open, anchorEl, setAnchorEl, setDialogOpenfil
     };
 
     const filecontext = useContext(fileContext);
-    const { addToStarred, deleteFile, downloadFile } = filecontext;
+    const { addToStarred,removeFileFromStarred, deleteFile, downloadFile } = filecontext;
 
     return (
         <div>
@@ -90,8 +91,16 @@ export default function FileMenu({ open, anchorEl, setAnchorEl, setDialogOpenfil
                     addToStarred(file_id);
                     setAnchorEl(null);
                 }} disableRipple>
-                    <StarIcon />
+                    <StarBorderIcon/>
                     Add to Starred
+                </MenuItem>
+
+                <MenuItem onClick={() => {
+                    removeFileFromStarred(file_id);
+                    setAnchorEl(null);
+                }} disableRipple>
+                    <StarIcon />
+                    Remove from Starred
                 </MenuItem>
 
                 <MenuItem onClick={() => {

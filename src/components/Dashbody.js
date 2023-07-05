@@ -48,8 +48,8 @@ const Dashbody = () => {
     const [dialogOpenfile, setDialogOpenfile] = React.useState(false);  //this state is for the dialog box to rename the file
 
 
-    const [contextFolder, setContextFolder] = useState("");  // This state will store the id of the folder that will be right clicked
-    const [contextFile, setContextFile] = useState("");      // This state will store the id of the file that will be right clicked
+    const [contextFolder, setContextFolder] = useState({id:"",isStarred:false});  // This state will store the id of the folder that will be right clicked
+    const [contextFile, setContextFile] = useState({id:"",isStarred:false}); // This state will store the id of the file that will be right clicked
 
     const [query, setQuery] = useState("");
 
@@ -68,8 +68,10 @@ const Dashbody = () => {
     const [anchorElfile, setAnchorElfile] = React.useState(null);
     const openfilemenu = Boolean(anchorElfile);
 
+    const [reload, setReload] = useState(false);
 
     useEffect(() => {
+        console.log("useEffect is running");
         if (localStorage.getItem("token")) {
             getFolders(window.location.pathname, query);
             getFilesbyPath(window.location.pathname, query);
@@ -79,7 +81,7 @@ const Dashbody = () => {
             navigate('/login');
         }
 
-    }, [window.location.pathname, query])
+    }, [window.location.pathname, query,reload])
 
 
     return (
@@ -142,7 +144,7 @@ const Dashbody = () => {
                                         onContextMenu={e => {
                                             e.preventDefault();
                                             setAnchorElfolder(e.currentTarget);
-                                            setContextFolder(item._id);
+                                            setContextFolder({id:item._id,isStarred:item.isStarred});
 
                                         }}>
 
@@ -164,8 +166,9 @@ const Dashbody = () => {
                                                 aria-expanded={openfoldermenu ? 'true' : undefined}
                                                 aria-haspopup="true"
                                                 onClick={(event) => {
+                                                    setReload(!reload);
                                                     setAnchorElfolder(event.currentTarget);
-                                                    setContextFolder(item._id);
+                                                    setContextFolder({id:item._id,isStarred:item.isStarred});
                                                 }}
                                             >
                                                 <MoreVertIcon />
@@ -178,9 +181,9 @@ const Dashbody = () => {
                             )
                         })
                     }
-                    <RenameFolderDialog open={dialogOpenfolder} setOpen={setDialogOpenfolder} folder_id={contextFolder} />
+                    <RenameFolderDialog open={dialogOpenfolder} setOpen={setDialogOpenfolder} folder_id={contextFolder.id} />
 
-                    <FolderMenu open={openfoldermenu} anchorEl={anchorElfolder} setAnchorEl={setAnchorElfolder} setDialogOpenfolder={setDialogOpenfolder} folder_id={contextFolder} />
+                    <FolderMenu open={openfoldermenu} anchorEl={anchorElfolder} setAnchorEl={setAnchorElfolder} setDialogOpenfolder={setDialogOpenfolder} folder={contextFolder} reload={reload} setReload={setReload} isStarredPage={false} />
                 </Grid>
 
             </Container>

@@ -43,7 +43,7 @@ const StarredBody = () => {
     const [dialogOpenfolder, setDialogOpenfolder] = React.useState(false);
     const [dialogOpenfile, setDialogOpenfile] = React.useState(false);
 
-    const [contextFolder, setContextFolder] = useState("");
+    const [contextFolder, setContextFolder] = useState({id:"",isStarred:false});
     const [contextFile, setContextFile] = useState("");
 
 
@@ -62,13 +62,13 @@ const StarredBody = () => {
     const [anchorElfile, setAnchorElfile] = React.useState(null);
     const openfilemenu = Boolean(anchorElfile);
 
-
+    const [reload, setReload] = useState(false);
 
     useEffect(() => {
         fetchStarredFiles(query);
         fetchStarredFolders(query);
 
-    }, [query])
+    }, [query,reload])
 
 
     return (
@@ -129,7 +129,7 @@ const StarredBody = () => {
                                     onContextMenu={e => {
                                         e.preventDefault();
                                         setAnchorElfolder(e.currentTarget);
-                                        setContextFolder(item._id);
+                                        setContextFolder({id:item._id,isStarred:item.isStarred});
 
                                     }}>
 
@@ -150,7 +150,7 @@ const StarredBody = () => {
                                                 aria-haspopup="true"
                                                 onClick={(event) => {
                                                     setAnchorElfolder(event.currentTarget);
-                                                    setContextFolder(item._id);
+                                                    setContextFolder({id:item._id,isStarred:item.isStarred});
                                                 }}
                                             >
                                                 <MoreVertIcon />
@@ -164,8 +164,9 @@ const StarredBody = () => {
                         })
                     }
 
-                    <RenameFolderDialog open={dialogOpenfolder} setOpen={setDialogOpenfolder} folder_id={contextFolder} />
-                    <FolderMenu open={openfoldermenu} anchorEl={anchorElfolder} setAnchorEl={setAnchorElfolder} setDialogOpenfolder={setDialogOpenfolder} folder_id={contextFolder} />
+                    <RenameFolderDialog open={dialogOpenfolder} setOpen={setDialogOpenfolder} folder_id={contextFolder.id} />
+
+                    <FolderMenu open={openfoldermenu} anchorEl={anchorElfolder} setAnchorEl={setAnchorElfolder} setDialogOpenfolder={setDialogOpenfolder} folder={contextFolder} reload={reload} setReload={setReload} isStarredPage={true} />
 
                 </Grid>
 
