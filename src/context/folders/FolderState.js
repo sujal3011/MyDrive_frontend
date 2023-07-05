@@ -63,7 +63,6 @@ const FolderState = (props) => {
 
             });
             const json = await response.json();
-            console.log(json);
 
             let newFolders = JSON.parse(JSON.stringify(folders))
             for (let i = 0; i < newFolders.length; i++) {
@@ -102,7 +101,7 @@ const FolderState = (props) => {
     
             });
             const folder = await response.json();
-            console.log(folder);
+            // console.log(folder);
 
             const newFolders=folders.filter(folder=>folder._id!==folder_id);
             setFolders(newFolders);
