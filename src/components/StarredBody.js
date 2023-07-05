@@ -44,7 +44,7 @@ const StarredBody = () => {
     const [dialogOpenfile, setDialogOpenfile] = React.useState(false);
 
     const [contextFolder, setContextFolder] = useState({id:"",isStarred:false});
-    const [contextFile, setContextFile] = useState("");
+    const [contextFile, setContextFile] = useState({id:"",isStarred:false});
 
 
 
@@ -190,7 +190,7 @@ const StarredBody = () => {
                                     onContextMenu={e => {
                                         e.preventDefault();
                                         setAnchorElfile(e.currentTarget);
-                                        setContextFile(item._id);
+                                        setContextFile({id:item._id,isStarred:item.isStarred});
 
                                     }}
                                 >
@@ -213,7 +213,7 @@ const StarredBody = () => {
                                             aria-haspopup="true"
                                             onClick={(event) => {
                                                 setAnchorElfile(event.currentTarget);
-                                                setContextFile(item._id);
+                                                setContextFile({id:item._id,isStarred:item.isStarred});
                                             }}
                                         >
                                             <MoreVertIcon />
@@ -228,8 +228,8 @@ const StarredBody = () => {
                         })
                     }
 
-                    <RenameFileDialog open={dialogOpenfile} setOpen={setDialogOpenfile} file_id={contextFile} />
-                    <FileMenu open={openfilemenu} anchorEl={anchorElfile} setAnchorEl={setAnchorElfile} setDialogOpenfile={setDialogOpenfile} file_id={contextFile} />
+                    <RenameFileDialog open={dialogOpenfile} setOpen={setDialogOpenfile} file_id={contextFile.id} />
+                    <FileMenu open={openfilemenu} anchorEl={anchorElfile} setAnchorEl={setAnchorElfile} setDialogOpenfile={setDialogOpenfile} file={contextFile} reload={reload} setReload={setReload} isStarredPage={true} />
                 </Grid>
 
 

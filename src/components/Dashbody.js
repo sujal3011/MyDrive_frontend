@@ -71,7 +71,7 @@ const Dashbody = () => {
     const [reload, setReload] = useState(false);
 
     useEffect(() => {
-        console.log("useEffect is running");
+        //console.log("useEffect is running");
         if (localStorage.getItem("token")) {
             getFolders(window.location.pathname, query);
             getFilesbyPath(window.location.pathname, query);
@@ -205,7 +205,7 @@ const Dashbody = () => {
                                     onContextMenu={e => {
                                         e.preventDefault();
                                         setAnchorElfile(e.currentTarget);
-                                        setContextFile(item._id);
+                                        setContextFile({id:item._id,isStarred:item.isStarred});
 
                                     }}
                                 >
@@ -250,7 +250,7 @@ const Dashbody = () => {
                                             aria-haspopup="true"
                                             onClick={(event) => {
                                                 setAnchorElfile(event.currentTarget);
-                                                setContextFile(item._id);
+                                                setContextFile({id:item._id,isStarred:item.isStarred});
                                             }}
                                         >
                                             <MoreVertIcon />
@@ -263,9 +263,9 @@ const Dashbody = () => {
                             )
                         })
                     }
-                    <RenameFileDialog open={dialogOpenfile} setOpen={setDialogOpenfile} file_id={contextFile} />
+                    <RenameFileDialog open={dialogOpenfile} setOpen={setDialogOpenfile} file_id={contextFile.id} />
 
-                    <FileMenu open={openfilemenu} anchorEl={anchorElfile} setAnchorEl={setAnchorElfile} setDialogOpenfile={setDialogOpenfile} file_id={contextFile} />
+                    <FileMenu open={openfilemenu} anchorEl={anchorElfile} setAnchorEl={setAnchorElfile} setDialogOpenfile={setDialogOpenfile} file={contextFile} reload={reload} setReload={setReload} isStarredPage={false}/>
 
                 </Grid>
 

@@ -140,7 +140,7 @@ const FileState = (props) => {
 
     // ROUTE-7  removing a file from starred
 
-    const removeFileFromStarred = async (id) => {
+    const removeFileFromStarred = async (id,isStarred) => {
         const response = await fetch(`${host}/files/removestarFile/${id}`, {
             method: 'PUT',
             headers: {
@@ -149,8 +149,12 @@ const FileState = (props) => {
             },
         });
 
-        const updatedFiles = files.filter(file => file._id !== id);
-        setFiles(updatedFiles);
+        if(isStarred){
+
+            const updatedFiles = files.filter(file => file._id !== id);
+            setFiles(updatedFiles);
+        }
+
     }
 
     const displayImageFile = async (id) => {

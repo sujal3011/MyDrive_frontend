@@ -58,14 +58,14 @@ const StyledMenu = styled((props) => (
     },
 }));
 
-export default function FileMenu({ open, anchorEl, setAnchorEl, setDialogOpenfile, file_id }) {
+export default function FileMenu({ open, anchorEl, setAnchorEl, setDialogOpenfile, file, reload, setReload, isStarred }) {
 
     const handleClose = () => {
         setAnchorEl(null);
     };
 
     const filecontext = useContext(fileContext);
-    const { addToStarred,removeFileFromStarred, deleteFile, downloadFile } = filecontext;
+    const { addToStarred, removeFileFromStarred, deleteFile, downloadFile } = filecontext;
 
     return (
         <div>
@@ -87,24 +87,33 @@ export default function FileMenu({ open, anchorEl, setAnchorEl, setDialogOpenfil
                     Rename
                 </MenuItem>
 
-                <MenuItem onClick={() => {
-                    addToStarred(file_id);
-                    setAnchorEl(null);
-                }} disableRipple>
-                    <StarBorderIcon/>
-                    Add to Starred
-                </MenuItem>
+                {
+                    !file.isStarred && <MenuItem onClick={() => {
+                        setReload(!reload);
+                        addToStarred(file.id,isStarred);
+                        setAnchorEl(null);
+                    }} disableRipple>
+                        <StarBorderIcon />
+                        Add to Starred
+                    </MenuItem>
+                }
+
+                {
+                    file.isStarred && <MenuItem onClick={() => {
+                        setReload(!reload);
+                        removeFileFromStarred(file.id,isStarred);
+                        setAnchorEl(null);
+                    }} disableRipple>
+                        <StarIcon />
+                        Remove from Starred
+                    </MenuItem>
+                }
+
+
+
 
                 <MenuItem onClick={() => {
-                    removeFileFromStarred(file_id);
-                    setAnchorEl(null);
-                }} disableRipple>
-                    <StarIcon />
-                    Remove from Starred
-                </MenuItem>
-
-                <MenuItem onClick={() => {
-                    downloadFile(file_id);
+                    downloadFile(file.id);
                     setAnchorEl(null);
                 }} disableRipple>
                     <DownloadIcon />
@@ -114,7 +123,7 @@ export default function FileMenu({ open, anchorEl, setAnchorEl, setDialogOpenfil
                 <Divider sx={{ my: 0.5 }} />
 
                 <MenuItem onClick={() => {
-                    deleteFile(file_id)
+                    deleteFile(file.id)
                     setAnchorEl(null);
                 }} disableRipple>
                     <DeleteIcon />
