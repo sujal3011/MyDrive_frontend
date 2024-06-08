@@ -28,6 +28,8 @@ import IconButton from '@mui/material/IconButton';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import FolderMenu from './FolderMenu';
 import FileMenu from './FileMenu';
+import ShareFolderDialog from './ShareFolderDialog';
+import ShareFileDialog from './ShareFileDialog';
 
 
 const Item = styled(Paper)(({ theme }) => ({
@@ -46,6 +48,9 @@ const Dashbody = () => {
 
     const [dialogOpenfolder, setDialogOpenfolder] = React.useState(false);  //this state is for the dialog box to rename the folder
     const [dialogOpenfile, setDialogOpenfile] = React.useState(false);  //this state is for the dialog box to rename the file
+
+    const [shareFolderDialog,setShareFolderDialog]=React.useState(false);
+    const [shareFileDialog,setShareFileDialog]=React.useState(false);
 
 
     const [contextFolder, setContextFolder] = useState({id:"",isStarred:false});  // This state will store the id of the folder that will be right clicked
@@ -129,7 +134,7 @@ const Dashbody = () => {
 
                 <Grid container spacing={2} sx={{ display: "flex", justifyContent: { xs: "center", lg: "start" }, alignItems: 'center', my: "0.5rem" }}>
                     {
-                        folders.map((item) => {
+                        folders.filter(folder=>!folder.isDeleted).map((item) => {
 
                             return (
                                 <>
@@ -183,7 +188,9 @@ const Dashbody = () => {
                     }
                     <RenameFolderDialog open={dialogOpenfolder} setOpen={setDialogOpenfolder} folder_id={contextFolder.id} />
 
-                    <FolderMenu open={openfoldermenu} anchorEl={anchorElfolder} setAnchorEl={setAnchorElfolder} setDialogOpenfolder={setDialogOpenfolder} folder={contextFolder} reload={reload} setReload={setReload} isStarredPage={false} />
+                    <ShareFolderDialog open={shareFolderDialog} setOpen={setShareFolderDialog} folder_id={contextFolder.id} />
+
+                    <FolderMenu open={openfoldermenu} anchorEl={anchorElfolder} setAnchorEl={setAnchorElfolder} setDialogOpenfolder={setDialogOpenfolder} setShareFolderOpen={setShareFolderDialog} folder={contextFolder} reload={reload} setReload={setReload} isStarredPage={false} />
                 </Grid>
 
             </Container>
@@ -196,7 +203,7 @@ const Dashbody = () => {
 
                 <Grid container spacing={2} sx={{ display: "flex", my: "0.5rem", justifyContent: { xs: "center", lg: "start" }, alignItems: 'center' }}>
                     {
-                        files.map((item) => {
+                        files.filter(file=>!file.isDeleted).map((item) => {
                             return (
 
 
@@ -265,7 +272,9 @@ const Dashbody = () => {
                     }
                     <RenameFileDialog open={dialogOpenfile} setOpen={setDialogOpenfile} file_id={contextFile.id} />
 
-                    <FileMenu open={openfilemenu} anchorEl={anchorElfile} setAnchorEl={setAnchorElfile} setDialogOpenfile={setDialogOpenfile} file={contextFile} reload={reload} setReload={setReload} isStarredPage={false}/>
+                    <ShareFileDialog open={shareFileDialog} setOpen={setShareFileDialog} file_id={contextFile.id} />
+
+                    <FileMenu open={openfilemenu} anchorEl={anchorElfile} setAnchorEl={setAnchorElfile} setShareFileOpen={setShareFileDialog} setDialogOpenfile={setDialogOpenfile} file={contextFile} reload={reload} setReload={setReload} isStarredPage={false}/>
 
                 </Grid>
 

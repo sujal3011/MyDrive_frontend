@@ -36,13 +36,15 @@ export const mainListItems = (
       <ListItemText primary="Starred" />
     </ListItemButton></NavLink>
 
-
+    <NavLink to="/trash" style={{ color: 'inherit', textDecoration: 'inherit'}}>
     <ListItemButton>
       <ListItemIcon>
         <DeleteIcon/>
       </ListItemIcon>
       <ListItemText primary="Bin" />
-    </ListItemButton>
+    </ListItemButton></NavLink>
+
+
   </React.Fragment>
 );
 

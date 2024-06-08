@@ -6,6 +6,7 @@ import FileState from "./context/files/FileState";
 import Redirect from "./components/Redirect"
 import ProfilePage from "./components/ProfilePage";
 import Dashboard from './components/Dashboard'
+import { ToastContainer } from 'react-toastify';
 
 
 function App() {
@@ -13,12 +14,15 @@ function App() {
     <FileState>
       <FolderState>
         <Router>
+
+          <ToastContainer />
           <Routes>
             <Route path="/" element={<Dashboard page="home" />} />
             <Route path="/login" element={<Login />} />
             <Route path="/signup" element={<Signup />} />
             <Route path="/folders/:id" element={<Dashboard page="home" />} />
             <Route path="/starredPage" element={<Dashboard page="starred" />} />
+            <Route path="/trash" element={<Dashboard page="trash" />} />
             <Route path="/redirect" element={<Redirect />} />
             <Route path="/profile" element={<ProfilePage />} />
 

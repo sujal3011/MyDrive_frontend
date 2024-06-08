@@ -143,6 +143,21 @@ const FolderState = (props) => {
           setFolders(json);
     }
 
+    const fetchFoldersMovedToBin= async (query)=>{
+        const response = await fetch(`${host}/folders/bin?query=${query}`, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+                "auth-token": localStorage.getItem("token"),
+            },
+
+          });
+
+          const json=await response.json();
+        //   console.log(json);
+          setFolders(json);
+    }
+
     // ROUTE-7  removing a folder from starred
 
     const removeFolderFromStarred=async (id,isStarred)=>{
@@ -162,10 +177,28 @@ const FolderState = (props) => {
         }
 
     }
+
+    const restoreFoldersFromBin=async (id)=>{
+        const response = await fetch(`${host}/folders/bin/restore/${id}`, {
+            method: 'PUT',
+
+            headers: {
+                'Content-Type': 'application/json',
+                "auth-token": localStorage.getItem("token"),
+            },
+          });
+          console.log(response);
+          if(response.status===200){
+              const updatedFolders=folders.filter(folder=>folder._id!==id);
+              setFolders(updatedFolders);
+          }
+
+
+    }
     
 
     return (
-        <folderContext.Provider value={{ folders, getFolders, addFolder, editFolder,addFolderToStarred,fetchStarredFolders,removeFolderFromStarred,deleteFolder}}>
+        <folderContext.Provider value={{ folders, getFolders, addFolder, editFolder,addFolderToStarred,fetchStarredFolders,removeFolderFromStarred,deleteFolder,fetchFoldersMovedToBin,restoreFoldersFromBin}}>
             {props.children}
         </folderContext.Provider>
     )

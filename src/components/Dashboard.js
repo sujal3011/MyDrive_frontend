@@ -29,6 +29,7 @@ import { deepOrange, deepPurple } from '@mui/material/colors';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import AddMenu from './AddMenu';
 import StarredBody from './StarredBody';
+import Trash from './Trash';
 import InputBase from '@mui/material/InputBase';
 import SearchIcon from '@mui/icons-material/Search';
 
@@ -247,6 +248,9 @@ const Dashboard = ({ page }) => {
                     }
                     {
                         page === "starred" && <StarredBody />
+                    }
+                    {
+                        page === "trash" && <Trash/>
                     }
 
                 </Box>

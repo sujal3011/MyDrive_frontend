@@ -16,6 +16,9 @@ import DownloadIcon from '@mui/icons-material/Download';
 import StarIcon from '@mui/icons-material/Star';
 import StarBorderIcon from '@mui/icons-material/StarBorder';
 import ShareIcon from '@mui/icons-material/Share';
+import axios from 'axios';
+import { toast } from 'react-toastify';
+const host=process.env.REACT_APP_SERVER_DOMAIN;
 
 const StyledMenu = styled((props) => (
   <Menu
@@ -58,70 +61,126 @@ const StyledMenu = styled((props) => (
   },
 }));
 
-export default function FolderMenu({ open, anchorEl, setAnchorEl, setDialogOpenfolder, folder,reload,setReload,isStarred}) {
+export default function FolderMenu({ open, anchorEl, setAnchorEl, setDialogOpenfolder,setShareFolderOpen,folder,reload,setReload,isStarred,isTrash=false}) {
 
   const handleClose = () => {
     setAnchorEl(null);
   };
 
   const foldercontext = useContext(folderContext);
-  const { addFolderToStarred, removeFolderFromStarred, deleteFolder } = foldercontext;
+  const { addFolderToStarred, removeFolderFromStarred, deleteFolder,restoreFoldersFromBin } = foldercontext;
+
+  const moveToBin = async (folderId) => {
+    try {
+        const response = await axios.put(`${host}/folders/bin/move/${folderId}`);
+        if (response.data.success) {
+          // toast.success('Folder moved to bin');
+        } else {
+          // toast.error('Failed to move folder to bin');
+        }
+    } catch (err) {
+      // toast.error('Failed to move folder to bin');
+    }
+  };
+
 
   return (
     <div>
-
-      <StyledMenu
-        id="demo-customized-menu"
-        MenuListProps={{
-          'aria-labelledby': 'demo-customized-button',
-        }}
-        anchorEl={anchorEl}
-        open={open}
-        onClose={handleClose}
-      >
-        <MenuItem onClick={() => {
-          setDialogOpenfolder(true);
-          setAnchorEl(null);
-        }} disableRipple>
-          <DriveFileRenameOutlineIcon />
-          Rename
-        </MenuItem>
-
-        {
-          folder.isStarred && <MenuItem onClick={() => {
-            setReload(!reload);
-            removeFolderFromStarred(folder.id,isStarred);
+      {!isTrash && 
+        <StyledMenu
+          id="demo-customized-menu"
+          MenuListProps={{
+            'aria-labelledby': 'demo-customized-button',
+          }}
+          anchorEl={anchorEl}
+          open={open}
+          onClose={handleClose}
+        >
+          <MenuItem onClick={() => {
+            setDialogOpenfolder(true);
             setAnchorEl(null);
           }} disableRipple>
-            <StarIcon />
-            Remove from Starred
+            <DriveFileRenameOutlineIcon />
+            Rename
           </MenuItem>
-        }
 
-        {
-
-          !folder.isStarred && <MenuItem onClick={() => {
-            setReload(!reload);
-            addFolderToStarred(folder.id);
+          <MenuItem onClick={() => {
+            setShareFolderOpen(true);
             setAnchorEl(null);
           }} disableRipple>
-            <StarBorderIcon />
-            Add to Starred
+            <ShareIcon />
+            Share
           </MenuItem>
 
-        }
+          {
+            folder.isStarred && <MenuItem onClick={() => {
+              setReload(!reload);
+              removeFolderFromStarred(folder.id,isStarred);
+              setAnchorEl(null);
+            }} disableRipple>
+              <StarIcon />
+              Remove from Starred
+            </MenuItem>
+          }
+
+          {
+
+            !folder.isStarred && <MenuItem onClick={() => {
+              setReload(!reload);
+              addFolderToStarred(folder.id);
+              setAnchorEl(null);
+            }} disableRipple>
+              <StarBorderIcon />
+              Add to Starred
+            </MenuItem>
+
+          }
 
 
-        <Divider sx={{ my: 0.5 }} />
+          <Divider sx={{ my: 0.5 }} />
 
-        <MenuItem onClick={() => {
-          deleteFolder(folder.id)
-          setAnchorEl(null);
-        }} disableRipple>
-          <DeleteIcon />
-          Remove
-        </MenuItem>
-      </StyledMenu>
+          <MenuItem onClick={() => {
+            moveToBin(folder.id)
+            setReload(!reload);
+            setAnchorEl(null);
+          }} disableRipple>
+            <DeleteIcon />
+            Move to Bin
+          </MenuItem>
+        </StyledMenu>
+      }
+
+      {isTrash && 
+        <StyledMenu
+          id="demo-customized-menu"
+          MenuListProps={{
+            'aria-labelledby': 'demo-customized-button',
+          }}
+          anchorEl={anchorEl}
+          open={open}
+          onClose={handleClose}
+        >
+          <MenuItem onClick={() => {
+            restoreFoldersFromBin(folder.id);
+            setReload(!reload);
+            setAnchorEl(null);
+          }} disableRipple>
+            <DriveFileRenameOutlineIcon />
+            Restore
+          </MenuItem>
+
+          <Divider sx={{ my: 0.5 }} />
+
+          <MenuItem onClick={() => {
+            // moveToBin(folder.id)
+            setAnchorEl(null);
+          }} disableRipple>
+            <DeleteIcon />
+            Delete permanently
+          </MenuItem>
+        </StyledMenu>
+      }
+
     </div>
   );
 }

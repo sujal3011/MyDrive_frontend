@@ -58,7 +58,7 @@ const StyledMenu = styled((props) => (
     },
 }));
 
-export default function FileMenu({ open, anchorEl, setAnchorEl, setDialogOpenfile, file, reload, setReload, isStarred }) {
+export default function FileMenu({ open, anchorEl, setAnchorEl, setDialogOpenfile,setShareFileOpen, file, reload, setReload, isStarred }) {
 
     const handleClose = () => {
         setAnchorEl(null);
@@ -85,6 +85,14 @@ export default function FileMenu({ open, anchorEl, setAnchorEl, setDialogOpenfil
                 }} disableRipple>
                     <DriveFileRenameOutlineIcon />
                     Rename
+                </MenuItem>
+
+                <MenuItem onClick={() => {
+                    setShareFileOpen(true);
+                    setAnchorEl(null);
+                }} disableRipple>
+                    <ShareIcon />
+                    Share
                 </MenuItem>
 
                 {
