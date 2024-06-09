@@ -8,10 +8,10 @@ import Paper from '@mui/material/Paper';
 import { styled } from '@mui/material/styles';
 import Toolbar from '@mui/material/Toolbar';
 import Box from '@mui/material/Box';
-import folderContext from '../context/folders/folderContext';
+import folderContext from '../../context/folders/folderContext';
 import { useNavigate } from 'react-router-dom';
 import Typography from '@mui/material/Typography';
-import fileContext from '../context/files/fileContext';
+import fileContext from '../../context/files/fileContext';
 import { Button } from '@mui/material';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
@@ -19,11 +19,14 @@ import { useTheme } from '@mui/material/styles';
 import InputBase from '@mui/material/InputBase';
 import SearchIcon from '@mui/icons-material/Search';
 import IconButton from '@mui/material/IconButton';
-import RenameFolderDialog from './RenameFolderDialog';
-import RenameFileDialog from './RenameFileDialog';
-import FileMenu from './FileMenu';
-import FolderMenu from './FolderMenu';
+import RenameFolderDialog from '../RenameFolderDialog';
+import RenameFileDialog from '../RenameFileDialog';
+import FileMenu from '../FileMenu';
+import FolderMenu from '../FolderMenu';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
+import RestoreDialog from './RestoreDialog';
+import Loader from '../Loader/Loader';
+import { toast } from 'react-toastify';
 
 
 const Item = styled(Paper)(({ theme }) => ({
@@ -42,6 +45,7 @@ const Trash = () => {
 
     const [dialogOpenfolder, setDialogOpenfolder] = React.useState(false);
     const [dialogOpenfile, setDialogOpenfile] = React.useState(false);
+    const [openRestoreDialog, setOpenRestoreDialog] = useState(false);
 
     const [contextFolder, setContextFolder] = useState({id:"",isStarred:false});
     const [contextFile, setContextFile] = useState({id:"",isStarred:false});
@@ -53,7 +57,7 @@ const Trash = () => {
     const navigate = useNavigate();
     const foldercontext = useContext(folderContext);
 
-    const { folders, fetchFoldersMovedToBin } = foldercontext;
+    const { folders, fetchFoldersMovedToBin,restoreFoldersFromBin } = foldercontext;
 
     const [anchorElfolder, setAnchorElfolder] = React.useState(null);
     const openfoldermenu = Boolean(anchorElfolder);
@@ -69,6 +73,12 @@ const Trash = () => {
 
     }, [query,reload])
 
+    const handleRestoreFolder = () => {
+        restoreFoldersFromBin(contextFolder.id);
+        setOpenRestoreDialog(false);
+        setReload(!reload);
+        toast.success("Restored Item");
+    };
 
     return (
         <Box
@@ -124,7 +134,7 @@ const Trash = () => {
                                         sm: '40%',
                                         lg: '20%',
                                     },
-                                }} key={item._id}
+                                }} key={item._id}   
                                     onContextMenu={e => {
                                         e.preventDefault();
                                         setAnchorElfolder(e.currentTarget);
@@ -133,13 +143,17 @@ const Trash = () => {
                                     }}>
 
                                     <Grid item xs={2} sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }} style={{ cursor: 'context-menu', maxWidth: "100%" }}>
-                                        <NavLink to={`/folders/${item._id}`} style={{ color: 'inherit', textDecoration: 'inherit', width: '100%' }}>
-                                            <Item sx={{ display: 'flex', justifyContent: 'start', alignItems: 'center', cursor: "pointer" }}>
+                                            <Item 
+                                                onClick={() => {
+                                                setContextFolder({ id: item._id, isStarred: item.isStarred });
+                                                setOpenRestoreDialog(true);
+                                            }}
+                                            sx={{ display: 'flex', justifyContent: 'start', alignItems: 'center', cursor: "pointer" }}>
 
                                                 <FolderOpenOutlinedIcon fontSize='large' sx={{ mx: "0.5rem", width: '20%' }} />
                                                 <Chip label={`${item.name}`} variant="outlined" sx={{ mx: "0.5rem", width: '80%' }} />
 
-                                            </Item></NavLink>
+                                            </Item>
 
                                             <IconButton
                                                 aria-label="more"
@@ -168,6 +182,12 @@ const Trash = () => {
                 </Grid>
 
             </Container>
+
+            <RestoreDialog 
+                open={openRestoreDialog} 
+                handleClose={() => setOpenRestoreDialog(false)} 
+                handleRestore={handleRestoreFolder} 
+            />
 
 
             <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
@@ -226,12 +246,11 @@ const Trash = () => {
                     }
 
                     <RenameFileDialog open={dialogOpenfile} setOpen={setDialogOpenfile} file_id={contextFile.id} />
-                    <FileMenu open={openfilemenu} anchorEl={anchorElfile} setAnchorEl={setAnchorElfile} setDialogOpenfile={setDialogOpenfile} file={contextFile} reload={reload} setReload={setReload} isStarredPage={true} />
+
+                    <FileMenu open={openfilemenu} anchorEl={anchorElfile} setAnchorEl={setAnchorElfile} file={contextFile} reload={reload} setReload={setReload} isTrash={true} />
                 </Grid>
-
-
-
             </Container>
+
         </Box>
     )
 }

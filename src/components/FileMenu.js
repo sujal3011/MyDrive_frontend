@@ -58,86 +58,117 @@ const StyledMenu = styled((props) => (
     },
 }));
 
-export default function FileMenu({ open, anchorEl, setAnchorEl, setDialogOpenfile,setShareFileOpen, file, reload, setReload, isStarred }) {
+export default function FileMenu({ open, anchorEl, setAnchorEl, setDialogOpenfile,setShareFileOpen, file, reload, setReload, isStarred ,isTrash=false}) {
 
     const handleClose = () => {
         setAnchorEl(null);
     };
 
     const filecontext = useContext(fileContext);
-    const { addToStarred, removeFileFromStarred, deleteFile, downloadFile } = filecontext;
+    const { addToStarred, removeFileFromStarred, deleteFile, downloadFile,restoreFileFromBin,MoveFileToBin} = filecontext;
 
     return (
         <div>
-
-            <StyledMenu
-                id="demo-customized-menu"
-                MenuListProps={{
-                    'aria-labelledby': 'demo-customized-button',
-                }}
-                anchorEl={anchorEl}
-                open={open}
-                onClose={handleClose}
-            >
-                <MenuItem onClick={() => {
-                    setDialogOpenfile(true);
-                    setAnchorEl(null);
-                }} disableRipple>
-                    <DriveFileRenameOutlineIcon />
-                    Rename
-                </MenuItem>
-
-                <MenuItem onClick={() => {
-                    setShareFileOpen(true);
-                    setAnchorEl(null);
-                }} disableRipple>
-                    <ShareIcon />
-                    Share
-                </MenuItem>
-
-                {
-                    !file.isStarred && <MenuItem onClick={() => {
-                        setReload(!reload);
-                        addToStarred(file.id,isStarred);
+            {!isTrash &&
+                <StyledMenu
+                    id="demo-customized-menu"
+                    MenuListProps={{
+                        'aria-labelledby': 'demo-customized-button',
+                    }}
+                    anchorEl={anchorEl}
+                    open={open}
+                    onClose={handleClose}
+                >
+                    <MenuItem onClick={() => {
+                        setDialogOpenfile(true);
                         setAnchorEl(null);
                     }} disableRipple>
-                        <StarBorderIcon />
-                        Add to Starred
+                        <DriveFileRenameOutlineIcon />
+                        Rename
                     </MenuItem>
-                }
 
-                {
-                    file.isStarred && <MenuItem onClick={() => {
-                        setReload(!reload);
-                        removeFileFromStarred(file.id,isStarred);
+                    <MenuItem onClick={() => {
+                        setShareFileOpen(true);
                         setAnchorEl(null);
                     }} disableRipple>
-                        <StarIcon />
-                        Remove from Starred
+                        <ShareIcon />
+                        Share
                     </MenuItem>
-                }
 
+                    {
+                        !file.isStarred && <MenuItem onClick={() => {
+                            setReload(!reload);
+                            addToStarred(file.id,isStarred);
+                            setAnchorEl(null);
+                        }} disableRipple>
+                            <StarBorderIcon />
+                            Add to Starred
+                        </MenuItem>
+                    }
 
+                    {
+                        file.isStarred && <MenuItem onClick={() => {
+                            setReload(!reload);
+                            removeFileFromStarred(file.id,isStarred);
+                            setAnchorEl(null);
+                        }} disableRipple>
+                            <StarIcon />
+                            Remove from Starred
+                        </MenuItem>
+                    }
 
+                    <MenuItem onClick={() => {
+                        downloadFile(file.id);
+                        setAnchorEl(null);
+                    }} disableRipple>
+                        <DownloadIcon />
+                        Download
+                    </MenuItem>
 
-                <MenuItem onClick={() => {
-                    downloadFile(file.id);
-                    setAnchorEl(null);
-                }} disableRipple>
-                    <DownloadIcon />
-                    Download
-                </MenuItem>
+                    <Divider sx={{ my: 0.5 }} />
 
-                <Divider sx={{ my: 0.5 }} />
+                    <MenuItem onClick={() => {
+                        MoveFileToBin(file.id);
+                        setReload(!reload);
+                        setAnchorEl(null);
+                    }} disableRipple>
+                        <DeleteIcon />
+                        Move to Bin
+                    </MenuItem>
+                </StyledMenu>
+            }           
 
-                <MenuItem onClick={() => {
-                    deleteFile(file.id)
-                    setAnchorEl(null);
-                }} disableRipple>
-                    <DeleteIcon />
-                    Remove
-                </MenuItem>
-            </StyledMenu>
+            
+      {isTrash && 
+        <StyledMenu
+          id="demo-customized-menu"
+          MenuListProps={{
+            'aria-labelledby': 'demo-customized-button',
+          }}
+          anchorEl={anchorEl}
+          open={open}
+          onClose={handleClose}
+        >
+          <MenuItem onClick={() => {
+            restoreFileFromBin(file.id);
+            setReload(!reload);
+            setAnchorEl(null);
+          }} disableRipple>
+            <DriveFileRenameOutlineIcon />
+            Restore
+          </MenuItem>
+
+          <Divider sx={{ my: 0.5 }} />
+
+          <MenuItem onClick={() => {
+            deleteFile(file.id)
+            setAnchorEl(null);
+          }} disableRipple>
+            <DeleteIcon />
+            Delete permanently
+          </MenuItem>
+        </StyledMenu>
+      }
         </div>
     );
 }

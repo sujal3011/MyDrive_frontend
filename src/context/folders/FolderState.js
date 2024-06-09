@@ -84,12 +84,7 @@ const FolderState = (props) => {
      // ROUTE-4  deleting a folder
 
     const deleteFolder = async (folder_id) => {
-
-        // TODO
-        //Deleting files inside the folder
-
         try {
-            
             const response = await fetch(`${host}/folders/deletefolder/${folder_id}`, {
                 method: 'DELETE',
     
@@ -97,8 +92,6 @@ const FolderState = (props) => {
                     'Content-Type': 'application/json',
                     "auth-token": localStorage.getItem("token")
                 },
-    
-    
             });
             const folder = await response.json();
             // console.log(folder);
@@ -178,6 +171,17 @@ const FolderState = (props) => {
 
     }
 
+    const moveFolderToBin=async (id)=>{
+        const response = await fetch(`${host}/folders/bin/move/${id}`, {
+            method: 'PUT',
+
+            headers: {
+                'Content-Type': 'application/json',
+                "auth-token": localStorage.getItem("token"),
+            },
+          });
+    }
+
     const restoreFoldersFromBin=async (id)=>{
         const response = await fetch(`${host}/folders/bin/restore/${id}`, {
             method: 'PUT',
@@ -198,7 +202,7 @@ const FolderState = (props) => {
     
 
     return (
-        <folderContext.Provider value={{ folders, getFolders, addFolder, editFolder,addFolderToStarred,fetchStarredFolders,removeFolderFromStarred,deleteFolder,fetchFoldersMovedToBin,restoreFoldersFromBin}}>
+        <folderContext.Provider value={{ folders, getFolders, addFolder, editFolder,addFolderToStarred,fetchStarredFolders,removeFolderFromStarred,deleteFolder,fetchFoldersMovedToBin,restoreFoldersFromBin,moveFolderToBin}}>
             {props.children}
         </folderContext.Provider>
     )

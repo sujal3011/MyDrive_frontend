@@ -138,6 +138,16 @@ const FileState = (props) => {
         setFiles(json);
     }
 
+    const MoveFileToBin = async (id) => {
+        const response = await fetch(`${host}/files/bin/move/${id}`, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json',
+                "auth-token": localStorage.getItem("token")
+            },
+        });
+    }
+
     const fetchFilesMovedToBin = async (query) => {
         const response = await fetch(`${host}/files/bin?query=${query}`, {
             method: 'GET',
@@ -149,6 +159,24 @@ const FileState = (props) => {
 
         const json = await response.json();
         setFiles(json);
+    }
+
+    const restoreFileFromBin=async (id)=>{
+        const response = await fetch(`${host}/files/bin/restore/${id}`, {
+            method: 'PUT',
+
+            headers: {
+                'Content-Type': 'application/json',
+                "auth-token": localStorage.getItem("token"),
+            },
+          });
+          console.log(response);
+          if(response.status===200){
+              const updatedFiles=files.filter(file=>file._id!==id);
+              setFiles(updatedFiles);
+          }
+
+
     }
 
     // ROUTE-7  removing a file from starred
@@ -214,7 +242,7 @@ const FileState = (props) => {
     }
 
     return (
-        <fileContext.Provider value={{ files, addFile, getFilesbyPath, addToStarred, fetchStarredFiles, removeFileFromStarred, renameFile, deleteFile, displayImageFile, downloadFile,fetchFilesMovedToBin }}>
+        <fileContext.Provider value={{ files, addFile, getFilesbyPath, addToStarred, fetchStarredFiles, removeFileFromStarred, renameFile, deleteFile, displayImageFile, downloadFile,fetchFilesMovedToBin,restoreFileFromBin,MoveFileToBin }}>
             {props.children}
         </fileContext.Provider>
     )

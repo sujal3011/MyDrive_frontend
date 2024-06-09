@@ -172,7 +172,7 @@ export default function FolderMenu({ open, anchorEl, setAnchorEl, setDialogOpenf
           <Divider sx={{ my: 0.5 }} />
 
           <MenuItem onClick={() => {
-            // moveToBin(folder.id)
+            deleteFolder(folder.id)
             setAnchorEl(null);
           }} disableRipple>
             <DeleteIcon />
