@@ -20,7 +20,7 @@ import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import { mainListItems } from './listItems';
 import { Button } from '@mui/material';
 import FormDialog from './Dialog'  //this is the dialog box to create new folder
-import { NavLink } from 'react-router-dom';
+import { NavLink,useParams } from 'react-router-dom';
 import Dashbody from './Dashbody';
 import { useNavigate } from "react-router-dom";
 import FileDialog from './FileDialog'
@@ -30,6 +30,7 @@ import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import AddMenu from './AddMenu';
 import StarredBody from './StarredBody';
 import Trash from './Trash/Trash';
+import ShareItem from './ShareItem/ShareItem';
 import InputBase from '@mui/material/InputBase';
 import SearchIcon from '@mui/icons-material/Search';
 
@@ -83,6 +84,7 @@ const mdTheme = createTheme();
 
 const Dashboard = ({ page }) => {
 
+    const {id,itemType} = useParams();
     const navigate = useNavigate();
 
     const onClickLogOut = () => {
@@ -93,10 +95,10 @@ const Dashboard = ({ page }) => {
 
 
     const [open, setOpen] = React.useState(false);
-    const [dialogOpen, setDialogOpen] = React.useState(false);  //this state is for the dialog box that will open when the 'create folder' button is clicked
-    const [filedialogOpen, setFiledialogOpen] = React.useState(false);  //this state is for the dialog box that will open when the 'upload file' button is clicked
+    const [dialogOpen, setDialogOpen] = React.useState(false); 
+    const [filedialogOpen, setFiledialogOpen] = React.useState(false);
 
-    const [anchorEl, setAnchorEl] = React.useState(null); //This state  is for the addMenu box that will open when the 'New' button is clicked
+    const [anchorEl, setAnchorEl] = React.useState(null);
     const addMenuOpen = Boolean(anchorEl);
 
     const [user, setUser] = useState("");
@@ -243,15 +245,10 @@ const Dashboard = ({ page }) => {
                             {secondaryListItems} */}
                         </List>
                     </Drawer>
-                    {
-                        page === "home" && <Dashbody />
-                    }
-                    {
-                        page === "starred" && <StarredBody />
-                    }
-                    {
-                        page === "trash" && <Trash/>
-                    }
+                    {page === "home" && <Dashbody />}
+                    {page === "starred" && <StarredBody />}
+                    {page === "trash" && <Trash/>}
+                    {page === "share" && <ShareItem id={id} itemType={itemType}/>}
 
                 </Box>
             </ThemeProvider>

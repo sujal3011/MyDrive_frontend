@@ -25,6 +25,7 @@ function App() {
             <Route path="/trash" element={<Dashboard page="trash" />} />
             <Route path="/redirect" element={<Redirect />} />
             <Route path="/profile" element={<ProfilePage />} />
+            <Route path="/share/:itemType/:id" element={<Dashboard page="share" />} />
 
           </Routes>
         </Router>

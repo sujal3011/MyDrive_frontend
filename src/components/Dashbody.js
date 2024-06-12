@@ -28,8 +28,6 @@ import IconButton from '@mui/material/IconButton';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import FolderMenu from './FolderMenu';
 import FileMenu from './FileMenu';
-import ShareFolderDialog from './ShareFolderDialog';
-import ShareFileDialog from './ShareFileDialog';
 
 
 const Item = styled(Paper)(({ theme }) => ({
@@ -46,16 +44,10 @@ const Dashbody = () => {
 
     const host = process.env.REACT_APP_SERVER_DOMAIN;
 
-    const [dialogOpenfolder, setDialogOpenfolder] = React.useState(false);  //this state is for the dialog box to rename the folder
-    const [dialogOpenfile, setDialogOpenfile] = React.useState(false);  //this state is for the dialog box to rename the file
-
-    const [shareFolderDialog,setShareFolderDialog]=React.useState(false);
-    const [shareFileDialog,setShareFileDialog]=React.useState(false);
-
-
-    const [contextFolder, setContextFolder] = useState({id:"",isStarred:false});  // This state will store the id of the folder that will be right clicked
-    const [contextFile, setContextFile] = useState({id:"",isStarred:false}); // This state will store the id of the file that will be right clicked
-
+    const [dialogOpenfolder, setDialogOpenfolder] = React.useState(false); 
+    const [dialogOpenfile, setDialogOpenfile] = React.useState(false);
+    const [contextFolder, setContextFolder] = useState({id:"",isStarred:false});
+    const [contextFile, setContextFile] = useState({id:"",isStarred:false});
     const [query, setQuery] = useState("");
 
 
@@ -188,9 +180,9 @@ const Dashbody = () => {
                     }
                     <RenameFolderDialog open={dialogOpenfolder} setOpen={setDialogOpenfolder} folder_id={contextFolder.id} />
 
-                    <ShareFolderDialog open={shareFolderDialog} setOpen={setShareFolderDialog} folder_id={contextFolder.id} />
+                    
 
-                    <FolderMenu open={openfoldermenu} anchorEl={anchorElfolder} setAnchorEl={setAnchorElfolder} setDialogOpenfolder={setDialogOpenfolder} setShareFolderOpen={setShareFolderDialog} folder={contextFolder} reload={reload} setReload={setReload} isStarredPage={false} />
+                    <FolderMenu open={openfoldermenu} anchorEl={anchorElfolder} setAnchorEl={setAnchorElfolder} setDialogOpenfolder={setDialogOpenfolder} folder={contextFolder} reload={reload} setReload={setReload} isStarredPage={false} />
                 </Grid>
 
             </Container>
@@ -272,9 +264,7 @@ const Dashbody = () => {
                     }
                     <RenameFileDialog open={dialogOpenfile} setOpen={setDialogOpenfile} file_id={contextFile.id} />
 
-                    <ShareFileDialog open={shareFileDialog} setOpen={setShareFileDialog} file_id={contextFile.id} />
-
-                    <FileMenu open={openfilemenu} anchorEl={anchorElfile} setAnchorEl={setAnchorElfile} setShareFileOpen={setShareFileDialog} setDialogOpenfile={setDialogOpenfile} file={contextFile} reload={reload} setReload={setReload} isStarredPage={false}/>
+                    <FileMenu open={openfilemenu} anchorEl={anchorElfile} setAnchorEl={setAnchorElfile} setDialogOpenfile={setDialogOpenfile} file={contextFile} reload={reload} setReload={setReload} isStarredPage={false}/>
 
                 </Grid>
 

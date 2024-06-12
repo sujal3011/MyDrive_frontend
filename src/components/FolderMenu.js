@@ -1,5 +1,6 @@
 import React, { useContext, useEffect, useState } from 'react'
 import folderContext from '../context/folders/folderContext';
+import { NavLink } from 'react-router-dom';
 import { styled, alpha } from '@mui/material/styles';
 import Button from '@mui/material/Button';
 import Menu from '@mui/material/Menu';
@@ -60,8 +61,9 @@ const StyledMenu = styled((props) => (
     },
   },
 }));
+const itemType = 'folder';
 
-export default function FolderMenu({ open, anchorEl, setAnchorEl, setDialogOpenfolder,setShareFolderOpen,folder,reload,setReload,isStarred,isTrash=false}) {
+export default function FolderMenu({ open, anchorEl, setAnchorEl, setDialogOpenfolder,folder,reload,setReload,isStarred,isTrash=false}) {
 
   const handleClose = () => {
     setAnchorEl(null);
@@ -104,13 +106,14 @@ export default function FolderMenu({ open, anchorEl, setAnchorEl, setDialogOpenf
             Rename
           </MenuItem>
 
-          <MenuItem onClick={() => {
-            setShareFolderOpen(true);
-            setAnchorEl(null);
-          }} disableRipple>
-            <ShareIcon />
-            Share
-          </MenuItem>
+          <NavLink to={`/share/${itemType}/${folder.id}`} style={{ textDecoration: 'none' }}>
+            <MenuItem onClick={() => {
+              setAnchorEl(null);
+            }} disableRipple>
+              <ShareIcon />
+              Share
+            </MenuItem>
+          </NavLink>
 
           {
             folder.isStarred && <MenuItem onClick={() => {
