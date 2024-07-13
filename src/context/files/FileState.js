@@ -241,8 +241,21 @@ const FileState = (props) => {
         }
     }
 
+    const fetchFilesSharedWithMe = async (query) => {
+        const response = await fetch(`${host}/files/shared-with-me?query=${query}`, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+                "auth-token": localStorage.getItem("token")
+            },
+        });
+
+        const json = await response.json();
+        setFiles(json);
+    }
+
     return (
-        <fileContext.Provider value={{ files, addFile, getFilesbyPath, addToStarred, fetchStarredFiles, removeFileFromStarred, renameFile, deleteFile, displayImageFile, downloadFile,fetchFilesMovedToBin,restoreFileFromBin,MoveFileToBin }}>
+        <fileContext.Provider value={{ files, addFile, getFilesbyPath, addToStarred, fetchStarredFiles, removeFileFromStarred, renameFile, deleteFile, displayImageFile, downloadFile,fetchFilesMovedToBin,restoreFileFromBin,MoveFileToBin,fetchFilesSharedWithMe }}>
             {props.children}
         </fileContext.Provider>
     )

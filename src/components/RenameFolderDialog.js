@@ -8,6 +8,7 @@ import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 // import fileContext from '../context/files/fileContext';
 import folderContext from '../context/folders/folderContext';
+import { toast } from 'react-toastify';
 
 export default function RenameFolderDialog({open , setOpen, folder_id}) {
 
@@ -25,10 +26,10 @@ export default function RenameFolderDialog({open , setOpen, folder_id}) {
     }
 
     const handleClick=()=>{
-        console.log("inside edit folder:",folder_id);
         editFolder(folder_id,folder.name);
         setFolder({name:""});
         setOpen(false);
+        toast.success("Folder renamed successfully!");
     }
 
 
@@ -61,6 +62,7 @@ export default function RenameFolderDialog({open , setOpen, folder_id}) {
                     <Button onClick={handleClick}>Update</Button>
                 </DialogActions>
             </Dialog>
+            {/* <ToastContainer /> */}
         </div>
     );
 }

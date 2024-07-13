@@ -20,21 +20,24 @@ export const mainListItems = (
       <ListItemText primary="My Drive" />
     </ListItemButton></NavLink>
 
-
+    <NavLink to="/shared-with-me" style={{ color: 'inherit', textDecoration: 'inherit'}}>
     <ListItemButton>
       <ListItemIcon>
         <FolderSharedIcon/>
       </ListItemIcon>
       <ListItemText primary="Shared with me" />
     </ListItemButton>
+    </NavLink>
 
 
-    <NavLink to="/starredPage" style={{ color: 'inherit', textDecoration: 'inherit'}}><ListItemButton>
+    <NavLink to="/starredPage" style={{ color: 'inherit', textDecoration: 'inherit'}}>
+    <ListItemButton>
       <ListItemIcon>
         <StarIcon/>
       </ListItemIcon>
       <ListItemText primary="Starred" />
-    </ListItemButton></NavLink>
+    </ListItemButton>
+    </NavLink>
 
     <NavLink to="/trash" style={{ color: 'inherit', textDecoration: 'inherit'}}>
     <ListItemButton>

@@ -33,6 +33,8 @@ import Trash from './Trash/Trash';
 import ShareItem from './ShareItem/ShareItem';
 import InputBase from '@mui/material/InputBase';
 import SearchIcon from '@mui/icons-material/Search';
+import SharedWithMeBody from './SharedWithMe/SharedWithMeBody';
+import Button1 from './Buttons/Button1';
 
 const drawerWidth = 240;
 
@@ -192,7 +194,24 @@ const Dashboard = ({ page }) => {
                             {
                                 (localStorage.getItem("token") ?
 
-                                    <Button onClick={onClickLogOut} variant="contained" sx={{ color: 'white', backgroundColor: 'orange', borderColor: 'green', mx: "1rem" }}>Logout</Button>
+                                    // <Button onClick={onClickLogOut} variant="outlined" sx={{ color: 'blue', backgroundColor: 'white', borderColor: 'blue', mx: "1rem" }}>Logout</Button>
+                                    // <Button1 title={"LOGOUT"} onClick={onClickLogOut}/>
+                                    <Button
+                                        onClick={onClickLogOut}
+                                        variant="contained"
+                                        sx={{
+                                            backgroundColor: 'white',
+                                            color: '#1976d2',
+                                            borderRadius: '8px',
+                                            border: '2px solid #1976d2',
+                                            '&:hover': {
+                                            backgroundColor: 'white',
+                                            marginRight:'70px'
+                                            },
+                                        }}
+                                        >
+                                        LOGOUT
+                                    </Button>
 
                                     :
 
@@ -249,6 +268,7 @@ const Dashboard = ({ page }) => {
                     {page === "starred" && <StarredBody />}
                     {page === "trash" && <Trash/>}
                     {page === "share" && <ShareItem id={id} itemType={itemType}/>}
+                    {page === "shared-with-me" && <SharedWithMeBody/>}
 
                 </Box>
             </ThemeProvider>

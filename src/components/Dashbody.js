@@ -28,6 +28,7 @@ import IconButton from '@mui/material/IconButton';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import FolderMenu from './FolderMenu';
 import FileMenu from './FileMenu';
+import FilePreview from './FilePreview/FilePreview';
 
 
 const Item = styled(Paper)(({ theme }) => ({
@@ -67,6 +68,9 @@ const Dashbody = () => {
 
     const [reload, setReload] = useState(false);
 
+    const [previewFileId, setPreviewFileId] = useState(null);
+    const [isPreviewOpen, setIsPreviewOpen] = useState(false);
+
     useEffect(() => {
         //console.log("useEffect is running");
         if (localStorage.getItem("token")) {
@@ -80,6 +84,14 @@ const Dashbody = () => {
 
     }, [window.location.pathname, query,reload])
 
+    const handleFileClick = (fileId) => {
+        setPreviewFileId(fileId);
+        setIsPreviewOpen(true);
+    };
+
+    const handleClosePreview = () => {
+        setIsPreviewOpen(false);
+    };
 
     return (
         <Box
@@ -207,36 +219,16 @@ const Dashbody = () => {
                                         setContextFile({id:item._id,isStarred:item.isStarred});
 
                                     }}
+                                    // onClick={() => handleFileClick(item._id)} 
                                 >
                                     <Grid sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }} item xs={3} style={{ cursor: 'context-menu', width: "100%", maxWidth: "100%" }} >
 
                                         {
-                                            (item.file_type === 'image/svg+xml' || item.file_type === 'image/png' || item.file_type === 'image/jpeg')
-
-                                                ? <a href={`${host}/files/image/${item._id}`} target="_blank" >
-
-
-                                                    <Card sx={{ maxWidth: 345 }}>
-                                                        {/* <CardMedia
-                                                            component="img"
-                                                            alt="green iguana"
-                                                            height="140"
-                                                            image={`${host}/files/image/${item._id}`}
-                                                        /> */}
-                                                        <CardContent>
-                                                            <Chip sx={{ mx: "0.5rem" }} label={`${item.original_name}`} variant="contained" />
-                                                        </CardContent>
-
-                                                    </Card>
-
-
-                                                </a>
-
-                                                :
                                                 <Item sx={{ display: 'flex', justifyContent: 'start', alignItems: 'center', cursor: "pointer", textDecoration: "none", width: '100%' }}>
 
                                                     <FolderOpenOutlinedIcon fontSize='large' sx={{ mx: "0.5rem", width: '20%' }} />
-                                                    <Chip sx={{ mx: "0.5rem", width: '80%' }} label={`${item.original_name}`} variant="contained" />
+                                                    
+                                                    <Chip sx={{ mx: "0.5rem", width: '80%' }} label={`${item.original_name}`} variant="contained" onClick={() => handleFileClick(item._id)}/>
 
                                                 </Item>
                                         }
@@ -269,6 +261,7 @@ const Dashbody = () => {
                 </Grid>
 
             </Container>
+            {isPreviewOpen && <FilePreview fileId={previewFileId} handleClose={handleClosePreview} />}
         </Box>
 
     )

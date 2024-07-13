@@ -199,10 +199,22 @@ const FolderState = (props) => {
 
 
     }
+
+    const fetchFoldersSharedWithMe= async (query)=>{
+        const response = await fetch(`${host}/folders/shared-with-me?query=${query}`, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+                "auth-token": localStorage.getItem("token"),
+            },
+          });
+          const json=await response.json();
+          setFolders(json);
+    }
     
 
     return (
-        <folderContext.Provider value={{ folders, getFolders, addFolder, editFolder,addFolderToStarred,fetchStarredFolders,removeFolderFromStarred,deleteFolder,fetchFoldersMovedToBin,restoreFoldersFromBin,moveFolderToBin}}>
+        <folderContext.Provider value={{ folders, getFolders, addFolder, editFolder,addFolderToStarred,fetchStarredFolders,removeFolderFromStarred,deleteFolder,fetchFoldersMovedToBin,restoreFoldersFromBin,moveFolderToBin,fetchFoldersSharedWithMe}}>
             {props.children}
         </folderContext.Provider>
     )
