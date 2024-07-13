@@ -28,6 +28,8 @@ import Avatar from '@mui/material/Avatar';
 import { deepOrange, deepPurple } from '@mui/material/colors';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import AddMenu from './AddMenu';
+import Menu from '@mui/material/Menu';
+import MenuItem from '@mui/material/MenuItem';
 import StarredBody from './StarredBody';
 import Trash from './Trash/Trash';
 import ShareItem from './ShareItem/ShareItem';
@@ -101,6 +103,7 @@ const Dashboard = ({ page }) => {
     const [filedialogOpen, setFiledialogOpen] = React.useState(false);
 
     const [anchorEl, setAnchorEl] = React.useState(null);
+    const [anchorElProfile, setAnchorElProfile] = useState(null);
     const addMenuOpen = Boolean(anchorEl);
 
     const [user, setUser] = useState("");
@@ -173,54 +176,22 @@ const Dashboard = ({ page }) => {
                                 MyDrive
                             </Typography>
 
-                            {/* <Paper
-                                component="form"
-                                sx={{ p: '2px 4px', display: 'flex', alignItems: 'center', width: 400 }}
+                            <div>
+                            <IconButton onClick={(event) => {setAnchorElProfile(event.currentTarget)}}>
+                                <Avatar sx={{ bgcolor: deepPurple[500] }}>
+                                {user}
+                                </Avatar>
+                            </IconButton>
+                            <Menu
+                                anchorEl={anchorElProfile}
+                                open={Boolean(anchorElProfile)}
+                                onClose={() => {setAnchorElProfile(null)}}
                             >
-                                <IconButton sx={{ p: '10px' }} aria-label="menu">
-                                </IconButton>
-                                <InputBase onClick={(e)=>{setQuery(e.target.value)}}
-                                    sx={{ ml: 1, flex: 1 }}
-                                    placeholder="Search"
-                                    inputProps={{ 'aria-label': 'search' }}
-                                />
-                                <IconButton type="button" sx={{ p: '10px' }} aria-label="search">
-                                    <SearchIcon />
-                                </IconButton>
-                                <IconButton color="primary" sx={{ p: '10px' }} aria-label="directions">
-                                </IconButton>
-                            </Paper> */}
-
-                            {
-                                (localStorage.getItem("token") ?
-
-                                    // <Button onClick={onClickLogOut} variant="outlined" sx={{ color: 'blue', backgroundColor: 'white', borderColor: 'blue', mx: "1rem" }}>Logout</Button>
-                                    // <Button1 title={"LOGOUT"} onClick={onClickLogOut}/>
-                                    <Button
-                                        onClick={onClickLogOut}
-                                        variant="contained"
-                                        sx={{
-                                            backgroundColor: 'white',
-                                            color: '#1976d2',
-                                            borderRadius: '8px',
-                                            border: '2px solid #1976d2',
-                                            '&:hover': {
-                                            backgroundColor: 'white',
-                                            marginRight:'70px'
-                                            },
-                                        }}
-                                        >
-                                        LOGOUT
-                                    </Button>
-
-                                    :
-
-                                    ""
-
-                                )
-                            }
-
-                            <NavLink style={{ color: 'inherit', textDecoration: 'inherit' }} to="/profile"><Avatar sx={{ bgcolor: deepPurple[500] }} >{user}</Avatar></NavLink>
+                                <NavLink style={{ color: 'inherit', textDecoration: 'inherit' }} to="/profile"><MenuItem>View Profile</MenuItem></NavLink>
+                                
+                                {localStorage.getItem("token")  && <MenuItem onClick={onClickLogOut}>Logout</MenuItem>}
+                            </Menu>
+                            </div>
 
                         </Toolbar>
                     </AppBar>

@@ -21,7 +21,7 @@ const FilePreview = ({ fileId, handleClose }) => {
         const url = URL.createObjectURL(fileBlob);
         setFileUrl(url);
         setFileType(response.headers['content-type']);
-        setOpen(true); // Open modal once file is fetched and ready to preview
+        setOpen(true);
       } catch (err) {
         setError('Failed to load file.');
       }
@@ -68,6 +68,20 @@ const FilePreview = ({ fileId, handleClose }) => {
   }
 
   let modalContent;
+
+  const getViewerUrl = (fileType, fileUrl) => {
+    console.log("fileType:",fileType);
+    if (fileType === 'application/vnd.google-apps.document') {
+      return `https://docs.google.com/viewer?url=${encodeURIComponent(fileUrl)}&embedded=true`;
+    }
+    if (fileType === 'application/vnd.google-apps.spreadsheet') {
+      return `https://docs.google.com/spreadsheets/d/e/${encodeURIComponent(fileUrl)}/pubhtml`;
+    }
+    return fileUrl;
+  };
+
+  const viewerUrl = getViewerUrl(fileType, fileUrl);
+
 
   if (fileType.startsWith('image/')) {
     modalContent = (
@@ -120,7 +134,7 @@ const FilePreview = ({ fileId, handleClose }) => {
         </Button>
       </Box>
     );
-  } else if (fileType === 'application/pdf') {
+  } else if (fileType === 'application/pdf' || fileType === 'application/vnd.google-apps.document' || fileType === 'application/vnd.google-apps.spreadsheet') {
     modalContent = (
       <Box
         sx={{
@@ -135,7 +149,7 @@ const FilePreview = ({ fileId, handleClose }) => {
           p: 4,
         }}
       >
-        <iframe title="Preview" src={fileUrl} width="100%" height="100%"></iframe>
+        <iframe title="Preview" src={viewerUrl} width="100%" height="100%"></iframe>
         <Button onClick={handleCloseClick} variant="contained" color="primary" sx={{ mt: 2, mr: 2 }}>
           Close Preview
         </Button>

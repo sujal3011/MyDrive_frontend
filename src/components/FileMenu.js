@@ -17,6 +17,7 @@ import DownloadIcon from '@mui/icons-material/Download';
 import StarIcon from '@mui/icons-material/Star';
 import StarBorderIcon from '@mui/icons-material/StarBorder';
 import ShareIcon from '@mui/icons-material/Share';
+import { toast } from 'react-toastify';
 
 const StyledMenu = styled((props) => (
     <Menu
@@ -103,6 +104,7 @@ export default function FileMenu({ open, anchorEl, setAnchorEl, setDialogOpenfil
                             setReload(!reload);
                             addToStarred(file.id,isStarred);
                             setAnchorEl(null);
+                            toast.success("File added to starred");
                         }} disableRipple>
                             <StarBorderIcon />
                             Add to Starred
@@ -114,6 +116,7 @@ export default function FileMenu({ open, anchorEl, setAnchorEl, setDialogOpenfil
                             setReload(!reload);
                             removeFileFromStarred(file.id,isStarred);
                             setAnchorEl(null);
+                            toast.success("File removed from starred");
                         }} disableRipple>
                             <StarIcon />
                             Remove from Starred
@@ -134,6 +137,7 @@ export default function FileMenu({ open, anchorEl, setAnchorEl, setDialogOpenfil
                         MoveFileToBin(file.id);
                         setReload(!reload);
                         setAnchorEl(null);
+                        toast.success("File moved to bin");
                     }} disableRipple>
                         <DeleteIcon />
                         Move to Bin
@@ -156,6 +160,7 @@ export default function FileMenu({ open, anchorEl, setAnchorEl, setDialogOpenfil
             restoreFileFromBin(file.id);
             setReload(!reload);
             setAnchorEl(null);
+            toast.success("File restored from bin");
           }} disableRipple>
             <DriveFileRenameOutlineIcon />
             Restore
@@ -166,6 +171,7 @@ export default function FileMenu({ open, anchorEl, setAnchorEl, setDialogOpenfil
           <MenuItem onClick={() => {
             deleteFile(file.id)
             setAnchorEl(null);
+            toast.success("File deleted permanently");
           }} disableRipple>
             <DeleteIcon />
             Delete permanently

@@ -21,6 +21,8 @@ import {
 } from '@mui/material';
 import { ArrowBack } from '@mui/icons-material'; 
 import { useParams,useNavigate } from 'react-router-dom';
+import { toast } from 'react-toastify';
+import Loader from '../Loader/Loader';
 
 const host = process.env.REACT_APP_SERVER_DOMAIN;
 
@@ -34,15 +36,22 @@ export default function ShareItem({id,itemType}) {
   const [initialPermissions, setInitialPermissions] = useState([]);
   const [reload, setReload] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
+  const [owner, setOwner] = useState(null);
+  const [loading, setLoading] = useState(false);
   const context = React.useContext(folderContext);
 
   const handleSave = async () => {
     try {
-      
+
+      // setLoading(true);
+
       const response=await axios.post(`${host}/share/item/${id}/updatePermissions`, { itemType,permissions });
       if(response.data.success){
+        setLoading(false);
         setReload(!reload);
+        toast.success("User permissions updated successfully");
       }
+
 
     } catch (err) {
       console.log(err);
@@ -61,6 +70,20 @@ export default function ShareItem({id,itemType}) {
   useEffect(() => {
     const fetchUsers = async () => {
       try {
+        
+        // setLoading(true);
+
+        //fetching owner of the item
+        let res;
+        if(itemType==='file'){
+          res = await axios.get(`${host}/files/${id}/owner`);
+          if(res.data.success) setOwner(res.data.owner);
+
+        }else if(itemType==='folder'){
+          res = await axios.get(`${host}/folders/${id}/owner`);
+          if(res.data.success) setOwner(res.data.owner);
+        }
+
         const response1 = await axios.get(`${host}/share/item/${id}/users`);
         if (response1.data.success) {
           setUsersWithPermissions(response1.data.usersWithPermissions);
@@ -70,7 +93,6 @@ export default function ShareItem({id,itemType}) {
           acc[user._id] = user.permission;
           return acc;
         }, {});
-        console.log("initial permissions:",initialPermissions);
         setInitialPermissions(initialPermissions);
 
         const response2 = await axios.get(`${host}/auth/allusers`);
@@ -80,7 +102,9 @@ export default function ShareItem({id,itemType}) {
           const usersWithoutPermissions = allUsers.filter(user => !userIdsWithPermission.includes(user._id));
           setUsersWithoutPermissions(usersWithoutPermissions);
         }
+        setLoading(false);
       } catch (err) {
+        setLoading(false);
         console.log(err);
       }
     };
@@ -92,22 +116,29 @@ export default function ShareItem({id,itemType}) {
     setSearchTerm(e.target.value);
   };
 
+  if(loading){
+    return <Loader/>
+  }
+
   return (
     <div style={{ width: '100vw', height: '100vh', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
 
 
         <Card style={{width:'40%', overflow: 'hidden', boxShadow: 'grey 16px 14px 30px'}}>
 
-        <IconButton onClick={() => navigate(-1)}>
-        <ArrowBack />
-      </IconButton>
-
         <CardContent>
             <div>
             <Typography variant="h6">Users With Access</Typography>
             <div style={{ maxHeight: '200px', overflowY: 'auto' }}>
             <List>
-                {usersWithPermissions.map(user => (
+
+                <ListItem>
+                    <ListItemText primary={owner?.email} />
+                    <Chip style={{marginRight:"10px"}} label={'Owner'}/>
+    
+                </ListItem>
+
+                {usersWithPermissions.filter(user=>user.email!==owner.email).map(user => (
                 <ListItem key={user._id}>
                     <ListItemText primary={user.email} />
                     <Chip style={{marginRight:"10px"}} label={(initialPermissions[user._id]==='edit' ? 'Editor' : 'Viewer')} />
@@ -140,7 +171,7 @@ export default function ShareItem({id,itemType}) {
             <div style={{ maxHeight: '200px', overflowY: 'auto' }}>
             <List>
                 {usersWithoutPermissions
-                .filter(user => user.email.toLowerCase().includes(searchTerm.toLowerCase()))
+                .filter(user => user.email!==owner.email && user.email.toLowerCase().includes(searchTerm.toLowerCase()))
                 .map(user => (
                     <ListItem key={user._id}>
                     <ListItemText primary={user.email} />
@@ -162,6 +193,7 @@ export default function ShareItem({id,itemType}) {
         </CardContent>
         <CardActions style={{ display: 'flex', justifyContent: 'end' }}>
         <Button size="small" variant="contained" onClick={handleSave}>Update</Button>
+        <Button size="small" variant="contained" onClick={() => navigate(-1)}>Close</Button>
         </CardActions>
         </Card>
   </div>  

@@ -29,6 +29,7 @@ import MoreVertIcon from '@mui/icons-material/MoreVert';
 import FolderMenu from './FolderMenu';
 import FileMenu from './FileMenu';
 import FilePreview from './FilePreview/FilePreview';
+import Loader from './Loader/Loader';
 
 
 const Item = styled(Paper)(({ theme }) => ({
@@ -70,17 +71,17 @@ const Dashbody = () => {
 
     const [previewFileId, setPreviewFileId] = useState(null);
     const [isPreviewOpen, setIsPreviewOpen] = useState(false);
+    const [isLoading, setIsLoading] = useState(false);
 
     useEffect(() => {
-        //console.log("useEffect is running");
         if (localStorage.getItem("token")) {
+            setIsLoading(true);
             getFolders(window.location.pathname, query);
             getFilesbyPath(window.location.pathname, query);
+            setIsLoading(false);
 
         }
-        else {
-            navigate('/login');
-        }
+        else navigate('/login');
 
     }, [window.location.pathname, query,reload])
 
@@ -92,6 +93,8 @@ const Dashbody = () => {
     const handleClosePreview = () => {
         setIsPreviewOpen(false);
     };
+
+    if(isLoading) return <Loader/>
 
     return (
         <Box

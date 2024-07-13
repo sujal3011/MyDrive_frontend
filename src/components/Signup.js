@@ -216,25 +216,25 @@ export default function SignUp() {
         <a href={`${process.env.REACT_APP_SERVER_DOMAIN}/auth/google`}>
         <div class="google-btn">
           <div class="google-icon-wrapper">
-            <img class="google-icon" src="https://upload.wikimedia.org/wikipedia/commons/5/53/Google_%22G%22_Logo.svg"/>
+          <img class="google-icon" src="/google_logo.png"/>
           </div>
           <div class="btn-text"><b>Google</b></div>
         </div>
         </a>
 
-        <div class="google-btn">
+        {/* <div class="google-btn">
           <div class="google-icon-wrapper">
             <img class="google-icon" src="https://upload.wikimedia.org/wikipedia/commons/b/b8/2021_Facebook_icon.svg"/>
           </div>
           <div class="btn-text"><b>Facebook</b></div>
-        </div>
+        </div> */}
 
-        <div class="google-btn">
+        {/* <div class="google-btn">
           <div class="google-icon-wrapper">
             <img class="google-icon" src="https://upload.wikimedia.org/wikipedia/commons/9/91/Octicons-mark-github.svg"/>
           </div>
           <div class="btn-text"><b>Github</b></div>
-        </div>
+        </div> */}
 
         </Box>
         {/* <Copyright sx={{ mt: 5 }} /> */}

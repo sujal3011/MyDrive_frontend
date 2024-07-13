@@ -120,6 +120,7 @@ export default function FolderMenu({ open, anchorEl, setAnchorEl, setDialogOpenf
               setReload(!reload);
               removeFolderFromStarred(folder.id,isStarred);
               setAnchorEl(null);
+              toast.success("Folder removed from starred");
             }} disableRipple>
               <StarIcon />
               Remove from Starred
@@ -132,6 +133,7 @@ export default function FolderMenu({ open, anchorEl, setAnchorEl, setDialogOpenf
               setReload(!reload);
               addFolderToStarred(folder.id);
               setAnchorEl(null);
+              toast.success("Folder added to starred");
             }} disableRipple>
               <StarBorderIcon />
               Add to Starred
@@ -146,6 +148,7 @@ export default function FolderMenu({ open, anchorEl, setAnchorEl, setDialogOpenf
             moveToBin(folder.id)
             setReload(!reload);
             setAnchorEl(null);
+            toast.success("Folder moved to bin");
           }} disableRipple>
             <DeleteIcon />
             Move to Bin
@@ -167,6 +170,7 @@ export default function FolderMenu({ open, anchorEl, setAnchorEl, setDialogOpenf
             restoreFoldersFromBin(folder.id);
             setReload(!reload);
             setAnchorEl(null);
+            toast.success("Folder restored from bin");
           }} disableRipple>
             <DriveFileRenameOutlineIcon />
             Restore
@@ -177,6 +181,8 @@ export default function FolderMenu({ open, anchorEl, setAnchorEl, setDialogOpenf
           <MenuItem onClick={() => {
             deleteFolder(folder.id)
             setAnchorEl(null);
+            setReload(!reload);
+            toast.success("Folder deleted permanently");
           }} disableRipple>
             <DeleteIcon />
             Delete permanently
